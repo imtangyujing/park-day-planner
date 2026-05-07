@@ -1,0 +1,1323 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>北京环球影城互动攻略</title>
+    <style>
+      :root {
+        --ink: #1f2933;
+        --muted: #637083;
+        --line: #d9e1ea;
+        --paper: #fbfaf7;
+        --panel: #ffffff;
+        --blue: #2563eb;
+        --red: #dc2626;
+        --amber: #d97706;
+        --green: #15803d;
+        --violet: #7c3aed;
+        --teal: #0f766e;
+        --shadow: 0 18px 50px rgba(31, 41, 51, 0.14);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        background:
+          linear-gradient(180deg, rgba(248, 250, 252, 0.94), rgba(239, 246, 255, 0.88)),
+          #eef4f8;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "PingFang SC", "Microsoft YaHei", sans-serif;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .app {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 380px;
+        gap: 16px;
+        padding: 16px;
+      }
+
+      .map-shell,
+      .side {
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        box-shadow: var(--shadow);
+      }
+
+      .map-shell {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.96);
+      }
+
+      .title h1 {
+        margin: 0;
+        font-size: 20px;
+        line-height: 1.2;
+      }
+
+      .title p {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .route-toggle {
+        display: inline-grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
+        padding: 4px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #f8fafc;
+      }
+
+      .route-toggle button,
+      .chip-row button,
+      .timeline button {
+        border: 0;
+        cursor: pointer;
+      }
+
+      .route-toggle button {
+        min-width: 112px;
+        border-radius: 6px;
+        padding: 8px 10px;
+        color: var(--muted);
+        background: transparent;
+        font-weight: 700;
+      }
+
+      .route-toggle button.active[data-route="planA"] {
+        color: #ffffff;
+        background: var(--red);
+      }
+
+      .route-toggle button.active[data-route="planB"] {
+        color: #ffffff;
+        background: var(--blue);
+      }
+
+      .map-scroll {
+        flex: 1;
+        overflow: auto;
+        padding: 16px;
+        background: #d8ead1;
+      }
+
+      .park-map {
+        position: relative;
+        width: min(1120px, 100%);
+        min-width: 760px;
+        aspect-ratio: 1.28;
+        margin: 0 auto;
+        overflow: hidden;
+        border: 2px solid #9bbf77;
+        border-radius: 8px;
+        background:
+          radial-gradient(circle at 16% 18%, rgba(67, 126, 52, 0.18) 0 2px, transparent 3px),
+          radial-gradient(circle at 75% 28%, rgba(48, 112, 50, 0.18) 0 2px, transparent 3px),
+          radial-gradient(circle at 55% 74%, rgba(73, 135, 58, 0.18) 0 2px, transparent 3px),
+          linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(83, 139, 67, 0.08)),
+          #83bd5f;
+        background-size: 38px 38px, 44px 44px, 52px 52px, auto, auto;
+        box-shadow: inset 0 0 80px rgba(56, 93, 43, 0.22);
+      }
+
+      .park-map::before {
+        content: "";
+        position: absolute;
+        inset: -8%;
+        background:
+          radial-gradient(ellipse at 76% 82%, rgba(54, 106, 49, 0.2), transparent 28%),
+          radial-gradient(ellipse at 28% 8%, rgba(54, 106, 49, 0.2), transparent 24%),
+          radial-gradient(ellipse at 94% 18%, rgba(54, 106, 49, 0.18), transparent 22%);
+        pointer-events: none;
+      }
+
+      .path {
+        position: absolute;
+        z-index: 1;
+        border-radius: 999px;
+        background: #d8d5c9;
+        border: 2px solid rgba(126, 118, 97, 0.34);
+        box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.45);
+      }
+
+      .path.main {
+        left: 8%;
+        top: 54%;
+        width: 76%;
+        height: 9%;
+        transform: rotate(-14deg);
+      }
+
+      .path.loop {
+        left: 30%;
+        top: 27%;
+        width: 49%;
+        height: 8%;
+        transform: rotate(10deg);
+      }
+
+      .path.right {
+        left: 66%;
+        top: 22%;
+        width: 8%;
+        height: 41%;
+        transform: rotate(25deg);
+      }
+
+      .path.left {
+        left: 18%;
+        top: 16%;
+        width: 8%;
+        height: 54%;
+        transform: rotate(-26deg);
+      }
+
+      .path.bridge {
+        left: 34%;
+        top: 70%;
+        width: 25%;
+        height: 7%;
+        transform: rotate(33deg);
+      }
+
+      .tree {
+        position: absolute;
+        z-index: 1;
+        width: 34px;
+        height: 34px;
+        border-radius: 55% 45% 50% 50%;
+        background: radial-gradient(circle at 35% 30%, #6eb54b, #2f7a3d 72%);
+        box-shadow:
+          18px 8px 0 -4px #397f3e,
+          -14px 12px 0 -7px #4f9a43,
+          8px -13px 0 -9px #83c763;
+        opacity: 0.8;
+      }
+
+      .zone {
+        position: absolute;
+        z-index: 2;
+        display: grid;
+        place-items: center;
+        padding: 8px;
+        border: 3px solid rgba(71, 85, 105, 0.28);
+        border-radius: 28% 18% 24% 18%;
+        color: #ffffff;
+        font-size: 28px;
+        font-weight: 900;
+        text-align: center;
+        text-shadow:
+          0 3px 0 rgba(40, 47, 35, 0.88),
+          2px 0 0 rgba(40, 47, 35, 0.78),
+          -2px 0 0 rgba(40, 47, 35, 0.78),
+          0 8px 16px rgba(20, 43, 18, 0.38);
+        box-shadow:
+          inset 0 18px 30px rgba(255, 255, 255, 0.25),
+          inset 0 -18px 34px rgba(37, 55, 31, 0.24),
+          0 14px 20px rgba(37, 67, 35, 0.22);
+      }
+
+      .zone small {
+        display: block;
+        margin-top: 2px;
+        font-size: 12px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .hollywood {
+        left: 12%;
+        top: 64%;
+        width: 22%;
+        height: 18%;
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.24), transparent),
+          #bd8b45;
+        border-radius: 20% 28% 18% 24%;
+      }
+
+      .minion {
+        left: 53%;
+        top: 69%;
+        width: 18%;
+        height: 18%;
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.32), transparent),
+          #e7b93d;
+        border-radius: 22% 18% 28% 22%;
+      }
+
+      .harry {
+        left: 76%;
+        top: 33%;
+        width: 20%;
+        height: 21%;
+        background:
+          linear-gradient(145deg, rgba(255, 255, 255, 0.28), transparent 45%),
+          #697080;
+        clip-path: polygon(15% 18%, 31% 4%, 43% 16%, 58% 2%, 69% 17%, 88% 18%, 95% 84%, 5% 86%);
+      }
+
+      .transformers {
+        left: 10%;
+        top: 16%;
+        width: 26%;
+        height: 25%;
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent),
+          #4e5f67;
+        border-radius: 12% 18% 22% 15%;
+      }
+
+      .kungfu {
+        left: 47%;
+        top: 14%;
+        width: 25%;
+        height: 17%;
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.28), transparent),
+          #d28e45;
+        border-radius: 24% 30% 22% 18%;
+      }
+
+      .jurassic {
+        left: 35%;
+        top: 43%;
+        width: 27%;
+        height: 24%;
+        background:
+          radial-gradient(circle at 42% 22%, #b36f2f 0 16%, transparent 17%),
+          linear-gradient(135deg, rgba(255, 255, 255, 0.22), transparent),
+          #7da45a;
+        border-radius: 46% 32% 40% 30%;
+      }
+
+      .waterworld {
+        left: 73%;
+        top: 9%;
+        width: 17%;
+        height: 18%;
+        background:
+          radial-gradient(circle at 55% 36%, #3db7d6 0 22%, transparent 24%),
+          linear-gradient(135deg, rgba(255, 255, 255, 0.25), transparent),
+          #9b6f47;
+        border-radius: 45% 45% 24% 28%;
+      }
+
+      .lagoon {
+        position: absolute;
+        z-index: 1;
+        left: 28%;
+        top: 57%;
+        width: 26%;
+        height: 18%;
+        border-radius: 58% 42% 48% 52%;
+        background:
+          radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.38), transparent 18%),
+          #169fd4;
+        border: 4px solid rgba(32, 100, 122, 0.3);
+        box-shadow: inset 0 -16px 30px rgba(21, 87, 126, 0.28);
+      }
+
+      .entrance {
+        position: absolute;
+        z-index: 2;
+        left: 4%;
+        bottom: 10%;
+        width: 17%;
+        padding: 8px;
+        border-radius: 8px;
+        color: #fff7ed;
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent),
+          #b6572d;
+        text-align: center;
+        font-size: 28px;
+        font-weight: 900;
+        text-shadow:
+          0 3px 0 rgba(52, 31, 23, 0.84),
+          2px 0 0 rgba(52, 31, 23, 0.74),
+          -2px 0 0 rgba(52, 31, 23, 0.74);
+        box-shadow:
+          inset 0 18px 30px rgba(255, 255, 255, 0.25),
+          0 14px 20px rgba(37, 67, 35, 0.22);
+      }
+
+      .route-layer {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      .route-path {
+        fill: none;
+        stroke-width: 7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 12 12;
+        opacity: 0.86;
+        filter: drop-shadow(0 4px 6px rgba(15, 23, 42, 0.22));
+      }
+
+      .route-path.planA {
+        stroke: var(--red);
+      }
+
+      .route-path.planB {
+        stroke: var(--blue);
+      }
+
+      .spot {
+        position: absolute;
+        z-index: 3;
+        width: 34px;
+        height: 34px;
+        transform: translate(-50%, -50%);
+        display: grid;
+        place-items: center;
+        border: 2px solid #ffffff;
+        border-radius: 999px;
+        color: #ffffff;
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.26);
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 900;
+      }
+
+      .spot[data-type="ride"] {
+        background: var(--red);
+      }
+
+      .spot[data-type="show"] {
+        background: var(--violet);
+      }
+
+      .spot[data-type="food"] {
+        background: var(--amber);
+      }
+
+      .spot[data-type="photo"] {
+        background: var(--green);
+      }
+
+      .spot[data-type="service"] {
+        background: var(--teal);
+      }
+
+      .spot.dim {
+        opacity: 0.42;
+      }
+
+      .spot.selected {
+        outline: 4px solid rgba(250, 204, 21, 0.8);
+        transform: translate(-50%, -50%) scale(1.12);
+      }
+
+      .spot-popup {
+        position: absolute;
+        z-index: 6;
+        width: min(340px, 46%);
+        padding: 14px;
+        border: 1px solid rgba(148, 163, 184, 0.55);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: 0 22px 50px rgba(15, 23, 42, 0.22);
+      }
+
+      .spot-popup::before {
+        content: "";
+        position: absolute;
+        left: 18px;
+        bottom: -9px;
+        width: 18px;
+        height: 18px;
+        background: rgba(255, 255, 255, 0.96);
+        border-right: 1px solid rgba(148, 163, 184, 0.55);
+        border-bottom: 1px solid rgba(148, 163, 184, 0.55);
+        transform: rotate(45deg);
+      }
+
+      .spot-popup h2 {
+        margin: 6px 32px 8px 0;
+        font-size: 18px;
+        line-height: 1.25;
+      }
+
+      .spot-popup .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .popup-close {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        display: grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        border: 0;
+        border-radius: 999px;
+        color: #475569;
+        background: #f1f5f9;
+        cursor: pointer;
+        font-weight: 900;
+      }
+
+      .popup-grid {
+        display: grid;
+        gap: 8px;
+      }
+
+      .popup-row {
+        display: grid;
+        grid-template-columns: 70px 1fr;
+        gap: 8px;
+        color: #1f2937;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .popup-row b {
+        color: #64748b;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        color: #334155;
+        background: #f1f5f9;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .side {
+        border-radius: 8px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+
+      .detail {
+        padding: 16px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .detail h2 {
+        margin: 0 0 6px;
+        font-size: 20px;
+        line-height: 1.25;
+      }
+
+      .detail .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 12px;
+      }
+
+      .detail-grid {
+        display: grid;
+        gap: 10px;
+      }
+
+      .route-card {
+        display: grid;
+        gap: 8px;
+      }
+
+      .route-card h2 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .route-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .info-row {
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfdff;
+      }
+
+      .info-row b {
+        display: block;
+        margin-bottom: 3px;
+        color: #334155;
+        font-size: 12px;
+      }
+
+      .info-row span {
+        color: #1f2937;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .chip-row {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--line);
+        background: #f8fafc;
+      }
+
+      .chip-row button {
+        flex: 0 0 auto;
+        border-radius: 999px;
+        padding: 7px 10px;
+        color: #475569;
+        background: #ffffff;
+        border: 1px solid var(--line);
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .chip-row button.active {
+        color: #ffffff;
+        background: #1f2937;
+        border-color: #1f2937;
+      }
+
+      .timeline {
+        overflow: auto;
+        padding: 12px 16px 16px;
+      }
+
+      .timeline h3 {
+        margin: 0 0 10px;
+        font-size: 14px;
+      }
+
+      .timeline-list {
+        display: grid;
+        gap: 8px;
+      }
+
+      .timeline button {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 76px 1fr;
+        gap: 10px;
+        align-items: start;
+        padding: 10px;
+        border-radius: 8px;
+        color: var(--ink);
+        background: #ffffff;
+        border: 1px solid var(--line);
+        text-align: left;
+      }
+
+      .timeline button.active {
+        border-color: #f59e0b;
+        background: #fffbeb;
+      }
+
+      .time {
+        color: #475569;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .step-title {
+        display: block;
+        margin-bottom: 3px;
+        font-weight: 850;
+        line-height: 1.25;
+      }
+
+      .step-note {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .legend {
+        position: absolute;
+        left: 12px;
+        bottom: 12px;
+        z-index: 4;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        max-width: 46%;
+        padding: 8px;
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.88);
+      }
+
+      .dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 99px;
+      }
+
+      .dot.ride {
+        background: var(--red);
+      }
+
+      .dot.show {
+        background: var(--violet);
+      }
+
+      .dot.food {
+        background: var(--amber);
+      }
+
+      .dot.photo {
+        background: var(--green);
+      }
+
+      .dot.service {
+        background: var(--teal);
+      }
+
+      @media (max-width: 980px) {
+        .app {
+          grid-template-columns: 1fr;
+          padding: 10px;
+        }
+
+        .side {
+          max-height: none;
+        }
+
+        .topbar {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .route-toggle {
+          width: 100%;
+        }
+
+        .route-toggle button {
+          min-width: 0;
+        }
+
+        .map-scroll {
+          padding: 10px;
+        }
+
+        .park-map {
+          min-width: 680px;
+        }
+
+        .spot-popup {
+          position: fixed;
+          left: 12px !important;
+          right: 12px;
+          top: auto !important;
+          bottom: 12px;
+          width: auto;
+          max-width: none;
+          max-height: 44vh;
+          overflow: auto;
+        }
+
+        .spot-popup::before {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <section class="map-shell" aria-label="互动地图">
+        <header class="topbar">
+          <div class="title">
+            <h1>北京环球影城作战地图</h1>
+            <p id="routeIntro"></p>
+          </div>
+          <div class="route-toggle" aria-label="路线切换">
+            <button class="active" type="button" data-route="planA">Plan A 早起</button>
+            <button type="button" data-route="planB">Plan B 起晚</button>
+          </div>
+        </header>
+
+        <div class="map-scroll">
+          <div class="park-map" id="parkMap">
+            <div class="path main" aria-hidden="true"></div>
+            <div class="path loop" aria-hidden="true"></div>
+            <div class="path right" aria-hidden="true"></div>
+            <div class="path left" aria-hidden="true"></div>
+            <div class="path bridge" aria-hidden="true"></div>
+            <div class="tree" style="left: 39%; top: 11%" aria-hidden="true"></div>
+            <div class="tree" style="left: 88%; top: 58%" aria-hidden="true"></div>
+            <div class="tree" style="left: 64%; top: 48%" aria-hidden="true"></div>
+            <div class="tree" style="left: 28%; top: 45%" aria-hidden="true"></div>
+            <div class="tree" style="left: 76%; top: 70%" aria-hidden="true"></div>
+            <div class="lagoon" aria-hidden="true"></div>
+            <div class="zone harry">哈利波特</div>
+            <div class="zone transformers">变形金刚</div>
+            <div class="zone kungfu">功夫熊猫</div>
+            <div class="zone jurassic">侏罗纪</div>
+            <div class="zone waterworld">水世界</div>
+            <div class="zone minion">小黄人</div>
+            <div class="zone hollywood">好莱坞</div>
+            <div class="entrance">大门</div>
+            <svg class="route-layer" viewBox="0 0 1000 781" preserveAspectRatio="none">
+              <polyline class="route-path planA" id="routePathA" points=""></polyline>
+              <polyline class="route-path planB" id="routePathB" points=""></polyline>
+            </svg>
+            <article class="spot-popup" id="spotPopup" aria-live="polite"></article>
+            <div class="legend" aria-label="图例">
+              <span class="tag"><span class="dot ride"></span>项目</span>
+              <span class="tag"><span class="dot show"></span>演出</span>
+              <span class="tag"><span class="dot food"></span>餐厅</span>
+              <span class="tag"><span class="dot photo"></span>拍照</span>
+              <span class="tag"><span class="dot service"></span>服务</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="side">
+        <section class="detail" id="detail"></section>
+        <nav class="chip-row" id="filters" aria-label="点位类型筛选"></nav>
+        <section class="timeline">
+          <h3 id="timelineTitle">当天时间轴</h3>
+          <div class="timeline-list" id="timeline"></div>
+        </section>
+      </aside>
+    </main>
+
+    <script>
+      const typeLabels = {
+        all: "全部",
+        ride: "项目",
+        show: "演出",
+        food: "餐厅",
+        photo: "拍照",
+        service: "服务"
+      };
+
+      const routes = {
+        planA: {
+          title: "Plan A：提前入园，先冲哈利波特",
+          intro: "8 点左右入园成功时使用；先解决哈利波特热门项目，后面顺路补园区重点。",
+          color: "red",
+          order: [
+            "birthday",
+            "globe",
+            "forbidden-journey",
+            "three-broomsticks",
+            "flight-hippogriff",
+            "ollivanders",
+            "decepticoaster",
+            "allspark",
+            "jurassic-adventure",
+            "hammond",
+            "nublar-slush",
+            "waterworld-show",
+            "minion-mayhem",
+            "untrainable",
+            "hogwarts-castle"
+          ]
+        },
+        planB: {
+          title: "Plan B：起晚先变形金刚，中午回哈利波特",
+          intro: "错过提前入园时使用；先去变形金刚消化早高峰，中午回哈利波特玩必去项目并吃三把扫帚。",
+          color: "blue",
+          order: [
+            "birthday",
+            "globe",
+            "allspark",
+            "decepticoaster",
+            "forbidden-journey",
+            "flight-hippogriff",
+            "three-broomsticks",
+            "waterworld-show",
+            "jurassic-adventure",
+            "hammond",
+            "nublar-slush",
+            "hogwarts-castle",
+            "ollivanders"
+          ]
+        }
+      };
+
+      const spots = [
+        {
+          id: "birthday",
+          name: "生日徽章服务中心",
+          area: "入口右侧",
+          type: "service",
+          x: 10,
+          y: 84,
+          priority: "开局必做",
+          summary: "朋友生日月，入园后先领徽章。",
+          recommended: "入园后第一站",
+          budget: "免费",
+          tips: "检票口右边服务中心。领完后一路会有工作人员祝生日快乐，情绪价值很高。",
+          planA: { time: "08:00-08:05", note: "提前入园后先拿，别回头补。" },
+          planB: { time: "09:00-09:05", note: "起晚也先拿，不影响后续体验。" }
+        },
+        {
+          id: "globe",
+          name: "环球大地球",
+          area: "入口",
+          type: "photo",
+          x: 14,
+          y: 78,
+          priority: "经典拍照",
+          summary: "入园仪式感点位。",
+          recommended: "入园 / 离园",
+          budget: "免费",
+          tips: "早上可以快速拍一张，别在这里消耗太久；晚上离园再补也可以。",
+          planA: { time: "08:05-08:10", note: "快拍后直奔哈利波特。" },
+          planB: { time: "09:05-09:10", note: "快拍后直接去变形金刚，不在入口区耗时。" }
+        },
+        {
+          id: "forbidden-journey",
+          name: "哈利波特与禁忌之旅",
+          area: "哈利波特的魔法世界",
+          type: "ride",
+          x: 86,
+          y: 44,
+          priority: "必玩 NO.1",
+          summary: "最核心项目，早起成功就先冲。",
+          recommended: "提前入园 / 中午错峰",
+          budget: "门票内",
+          tips: "Plan B 也必须保留这个点。中午如果排队比早高峰低，就在哈利波特区解决。",
+          planA: { time: "08:10-09:00", note: "早起成功第一目标。" },
+          planB: { time: "11:30-12:30", note: "变形金刚后回哈利波特，中午错峰玩必去项。" }
+        },
+        {
+          id: "flight-hippogriff",
+          name: "鹰马的飞行",
+          area: "哈利波特的魔法世界",
+          type: "ride",
+          x: 91,
+          y: 52,
+          priority: "顺路",
+          summary: "哈利波特区顺路刷的小项目。",
+          recommended: "禁忌之旅后",
+          budget: "门票内",
+          tips: "如果排队不短，可以直接跳过，把时间留给大项和餐厅。",
+          planA: { time: "10:05-10:40", note: "顺路刷，排长就放弃。" },
+          planB: { time: "12:30-12:50", note: "只在排队短时顺路补，不要影响午餐。" }
+        },
+        {
+          id: "ollivanders",
+          name: "奥利凡德",
+          area: "哈利波特的魔法世界",
+          type: "show",
+          x: 81,
+          y: 50,
+          priority: "可选互动",
+          summary: "互动魔杖体验。",
+          recommended: "哈利波特区内顺路",
+          budget: "购买魔杖另算",
+          tips: "如果朋友对魔杖互动感兴趣就留；否则不必牺牲热门项目时间。",
+          planA: { time: "10:50-11:20", note: "餐前或餐后顺路。" },
+          planB: { time: "18:50-19:10", note: "晚间轻量补充，有演出/灯光则优先看演出。" }
+        },
+        {
+          id: "three-broomsticks",
+          name: "三把扫帚",
+          area: "哈利波特的魔法世界",
+          type: "food",
+          x: 78,
+          y: 42,
+          priority: "氛围餐厅",
+          summary: "湖景位可和霍格沃茨城堡同框。",
+          recommended: "10:30 前后 / 12:50 后 / 17:30-18:00",
+          budget: "约 ¥100-160/人",
+          tips: "推荐烤鸡排骨拼盘、黄油啤酒、蜜雪乌龙茶。中午高峰会爆；室外出片但冷时可转室内。",
+          planA: { time: "10:20-11:00", note: "10:30 开门前后吃早午餐，争取湖景位。" },
+          planB: { time: "12:50-13:50", note: "中午在哈利波特区吃饭，优先争取湖景位。" }
+        },
+        {
+          id: "hogwarts-castle",
+          name: "霍格沃茨城堡",
+          area: "哈利波特的魔法世界",
+          type: "photo",
+          x: 91,
+          y: 36,
+          priority: "必拍",
+          summary: "白天和夜晚都值得拍。",
+          recommended: "早上人少 / 晚间灯光",
+          budget: "免费",
+          tips: "灯光秀是否开放要以当天 App 为准。湖边角度更稳。",
+          planA: { time: "18:30-19:00", note: "晚间收尾，补灯光和合照。" },
+          planB: { time: "18:20-18:50", note: "晚上回哈利波特，看灯光/拍城堡/收尾。" }
+        },
+        {
+          id: "decepticoaster",
+          name: "霸天虎过山车",
+          area: "变形金刚基地",
+          type: "ride",
+          x: 17,
+          y: 31,
+          priority: "刺激党必冲",
+          summary: "园区刺激强度代表。",
+          recommended: "上午 / 饭点错峰",
+          budget: "门票内",
+          tips: "不坐刺激项目的人可以在附近休息或拍照，避免强行陪排。",
+          planA: { time: "11:20-12:00", note: "从哈利波特出来后冲。" },
+          planB: { time: "10:20-11:20", note: "火种源后看排队和体力，刺激党再冲。" }
+        },
+        {
+          id: "allspark",
+          name: "变形金刚：火种源争夺战",
+          area: "变形金刚基地",
+          type: "ride",
+          x: 29,
+          y: 33,
+          priority: "必玩",
+          summary: "沉浸感强，适合大多数人。",
+          recommended: "霸天虎前后",
+          budget: "门票内",
+          tips: "如果霸天虎有人不坐，这个更适合作为共同项目。",
+          planA: { time: "12:05-12:50", note: "接在霸天虎后。" },
+          planB: { time: "09:20-10:20", note: "起晚后的第一个大项，先避开哈利波特早高峰。" }
+        },
+        {
+          id: "jurassic-adventure",
+          name: "侏罗纪世界大冒险",
+          area: "侏罗纪世界努布拉岛",
+          type: "ride",
+          x: 48,
+          y: 55,
+          priority: "必玩",
+          summary: "真实感强，热门大项之一。",
+          recommended: "午后错峰",
+          budget: "门票内",
+          tips: "可和哈蒙德餐厅、努布拉沙冰组合成侏罗纪区域停留。",
+          planA: { time: "13:45-14:20", note: "午饭后进入侏罗纪。" },
+          planB: { time: "15:00-15:50", note: "未来水世界后如果有时间再去侏罗纪。" }
+        },
+        {
+          id: "hammond",
+          name: "哈蒙德餐厅",
+          area: "侏罗纪世界努布拉岛",
+          type: "food",
+          x: 53,
+          y: 65,
+          priority: "正餐备选",
+          summary: "适合多人分享，菜品比快餐更完整。",
+          recommended: "11:00 前 / 14:00 后",
+          budget: "约 ¥140-170/人",
+          tips: "推荐川味炸鸡小汉堡、哈蒙德汉堡、黑松露奶油牛肉意面。可先取号再刷项目，座位只保留 10 分钟。",
+          planA: { time: "14:20-15:00", note: "如果三把扫帚只轻食，这里补正餐。" },
+          planB: { time: "15:50-16:25", note: "侏罗纪后逛一下；如果三把扫帚吃饱，这里只当备选。" }
+        },
+        {
+          id: "nublar-slush",
+          name: "努布拉沙冰",
+          area: "侏罗纪世界努布拉岛",
+          type: "food",
+          x: 61,
+          y: 58,
+          priority: "补给",
+          summary: "青苹果味雪泥被推荐。",
+          recommended: "下午",
+          budget: "约 ¥40-60",
+          tips: "适合作为侏罗纪区域结束后的冷饮补给，别和正餐饮品重复花钱。",
+          planA: { time: "15:00-15:10", note: "转场前补给。" },
+          planB: { time: "16:25-16:40", note: "侏罗纪区域补给，推荐青苹果味雪泥。" }
+        },
+        {
+          id: "waterworld-show",
+          name: "未来水世界表演",
+          area: "未来水世界",
+          type: "show",
+          x: 82,
+          y: 20,
+          priority: "必看演出",
+          summary: "重点表演项目，按当天场次卡点。",
+          recommended: "以 App 场次为准",
+          budget: "门票内",
+          tips: "前排有湿身风险。当天表演时间必须进官方 App 核对。",
+          planA: { time: "16:10-16:30", note: "按资料路线卡点。" },
+          planB: { time: "14:10-14:40", note: "午餐后去看表演，具体场次以官方 App 为准。" }
+        },
+        {
+          id: "untrainable",
+          name: "不可驯服",
+          area: "好莱坞 / 表演区",
+          type: "show",
+          x: 15,
+          y: 53,
+          priority: "演出备选",
+          summary: "7 点前看完后可查漏补缺。",
+          recommended: "傍晚",
+          budget: "门票内",
+          tips: "当天场次不固定，要以官方 App 为准；若停演则改传奇现场/威震天合影。",
+          planA: { time: "17:40-18:10", note: "有合适场次就插入。" },
+          planB: { time: "16:20-16:50", note: "Plan B 的晚高峰缓冲。" }
+        },
+        {
+          id: "minion-mayhem",
+          name: "小黄人闹翻天",
+          area: "小黄人乐园",
+          type: "ride",
+          x: 62,
+          y: 78,
+          priority: "轻松项目",
+          summary: "适合下午降低强度。",
+          recommended: "下午",
+          budget: "门票内",
+          tips: "排队太长时可只拍照逛周边，不必硬刷。",
+          planA: { time: "15:05-15:30", note: "侏罗纪后切轻松项目。" },
+          planB: { time: "09:30-10:00", note: "起晚后先从右转/逆时针轻项目开局。" }
+        },
+        {
+          id: "minion-land",
+          name: "小黄人乐园拍照区",
+          area: "小黄人乐园",
+          type: "photo",
+          x: 66,
+          y: 72,
+          priority: "出片",
+          summary: "颜色明亮，适合朋友生日氛围照。",
+          recommended: "上午 / 下午",
+          budget: "免费",
+          tips: "Plan B 开局可先轻松拍，别在商店停太久。",
+          planA: { time: "15:30-15:45", note: "项目后快拍。" },
+          planB: { time: "09:10-09:30", note: "起晚不焦虑，先进入状态。" }
+        },
+        {
+          id: "kungfu-area",
+          name: "功夫熊猫馆",
+          area: "功夫熊猫盖世之地",
+          type: "photo",
+          x: 59,
+          y: 25,
+          priority: "室内缓冲",
+          summary: "天气冷或累时适合作为缓冲区。",
+          recommended: "上午中段 / 傍晚",
+          budget: "看消费",
+          tips: "区域里有阿宝工坊、智慧仙桃树等，适合慢逛。",
+          planA: { time: "12:50-13:10", note: "若餐厅等待，可短暂停留。" },
+          planB: { time: "10:10-11:00", note: "起晚后先走逆时针，不和哈利波特硬碰。" }
+        },
+        {
+          id: "citywalk-shop",
+          name: "环球大门左手边商店",
+          area: "好莱坞 / 出入口",
+          type: "service",
+          x: 25,
+          y: 72,
+          priority: "购物收尾",
+          summary: "所有主题商品较集中。",
+          recommended: "离园前",
+          budget: "按需",
+          tips: "建议最后买，避免背一天。若巡游停演，可改成威震天合影或传奇现场。",
+          planA: { time: "17:30-18:30", note: "拍照、逛街、买纪念品。" },
+          planB: { time: "19:15-19:40", note: "最后统一买，降低负担。" }
+        }
+      ];
+
+      let activeRoute = "planA";
+      let activeFilter = "all";
+      let selectedId = "birthday";
+
+      const byId = Object.fromEntries(spots.map((spot) => [spot.id, spot]));
+      const parkMap = document.getElementById("parkMap");
+      const detail = document.getElementById("detail");
+      const spotPopup = document.getElementById("spotPopup");
+      const timeline = document.getElementById("timeline");
+      const filters = document.getElementById("filters");
+      const routeIntro = document.getElementById("routeIntro");
+      const timelineTitle = document.getElementById("timelineTitle");
+
+      function routePoints(routeKey) {
+        return routes[routeKey].order
+          .map((id) => byId[id])
+          .filter(Boolean)
+          .map((spot) => `${spot.x * 10},${spot.y * 7.81}`)
+          .join(" ");
+      }
+
+      function renderMarkers() {
+        document.querySelectorAll(".spot").forEach((node) => node.remove());
+        const routeSet = new Set(routes[activeRoute].order);
+
+        spots.forEach((spot) => {
+          if (activeFilter !== "all" && spot.type !== activeFilter) return;
+
+          const button = document.createElement("button");
+          button.className = "spot";
+          button.type = "button";
+          button.dataset.type = spot.type;
+          button.style.left = `${spot.x}%`;
+          button.style.top = `${spot.y}%`;
+          button.textContent = routeSet.has(spot.id)
+            ? routes[activeRoute].order.indexOf(spot.id) + 1
+            : "•";
+          button.title = spot.name;
+
+          if (!routeSet.has(spot.id)) button.classList.add("dim");
+          if (spot.id === selectedId) button.classList.add("selected");
+
+          button.addEventListener("click", () => {
+            selectedId = spot.id;
+            render();
+          });
+
+          parkMap.appendChild(button);
+        });
+      }
+
+      function renderDetail() {
+        const route = routes[activeRoute];
+        detail.innerHTML = `
+          <div class="route-card">
+            <span class="tag">当前路线</span>
+            <h2>${route.title}</h2>
+            <p>${route.intro}</p>
+          </div>
+        `;
+      }
+
+      function renderPopup() {
+        const spot = byId[selectedId] || spots[0];
+        const isInActiveRoute = routes[activeRoute].order.includes(spot.id);
+        const routeInfo = isInActiveRoute ? spot[activeRoute] || {} : {};
+        const left = Math.min(Math.max(spot.x + 2, 2), 64);
+        const top = Math.min(Math.max(spot.y - 28, 4), 72);
+
+        spotPopup.style.left = `${left}%`;
+        spotPopup.style.top = `${top}%`;
+        spotPopup.innerHTML = `
+          <button class="popup-close" type="button" aria-label="关闭详情">×</button>
+          <div class="meta">
+            <span class="tag">${typeLabels[spot.type]}</span>
+            <span class="tag">${spot.area}</span>
+            <span class="tag">${spot.priority}</span>
+          </div>
+          <h2>${spot.name}</h2>
+          <div class="popup-grid">
+            <div class="popup-row"><b>一句话</b><span>${spot.summary}</span></div>
+            <div class="popup-row"><b>时间</b><span>${routeInfo.time || spot.recommended}</span></div>
+            <div class="popup-row"><b>路线</b><span>${routeInfo.note || "未纳入当前路线，作为备选点位保留。"}</span></div>
+            <div class="popup-row"><b>预算</b><span>${spot.budget}</span></div>
+            <div class="popup-row"><b>注意</b><span>${spot.tips}</span></div>
+          </div>
+        `;
+
+        spotPopup.querySelector(".popup-close").onclick = () => {
+          spotPopup.hidden = true;
+          document.querySelectorAll(".spot").forEach((node) => node.classList.remove("selected"));
+        };
+        spotPopup.hidden = false;
+      }
+
+      function renderFilters() {
+        filters.innerHTML = "";
+        Object.entries(typeLabels).forEach(([type, label]) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.textContent = label;
+          if (type === activeFilter) button.classList.add("active");
+          button.addEventListener("click", () => {
+            activeFilter = type;
+            render();
+          });
+          filters.appendChild(button);
+        });
+      }
+
+      function renderTimeline() {
+        const route = routes[activeRoute];
+        timelineTitle.textContent = route.title;
+        routeIntro.textContent = route.intro;
+        timeline.innerHTML = "";
+
+        route.order.forEach((id) => {
+          const spot = byId[id];
+          if (!spot) return;
+          const step = spot[activeRoute] || {};
+          const button = document.createElement("button");
+          button.type = "button";
+          if (spot.id === selectedId) button.classList.add("active");
+          button.innerHTML = `
+            <span class="time">${step.time || "备选"}</span>
+            <span>
+              <span class="step-title">${spot.name}</span>
+              <span class="step-note">${step.note || spot.summary}</span>
+            </span>
+          `;
+          button.addEventListener("click", () => {
+            selectedId = spot.id;
+            activeFilter = "all";
+            render();
+          });
+          timeline.appendChild(button);
+        });
+      }
+
+      function renderRoutes() {
+        document.getElementById("routePathA").setAttribute("points", routePoints("planA"));
+        document.getElementById("routePathB").setAttribute("points", routePoints("planB"));
+        document.getElementById("routePathA").style.display = activeRoute === "planA" ? "block" : "none";
+        document.getElementById("routePathB").style.display = activeRoute === "planB" ? "block" : "none";
+      }
+
+      function renderRouteButtons() {
+        document.querySelectorAll(".route-toggle button").forEach((button) => {
+          button.classList.toggle("active", button.dataset.route === activeRoute);
+          button.onclick = () => {
+            activeRoute = button.dataset.route;
+            selectedId = routes[activeRoute].order[0];
+            render();
+          };
+        });
+      }
+
+      function render() {
+        renderRoutes();
+        renderMarkers();
+        renderDetail();
+        renderPopup();
+        renderFilters();
+        renderTimeline();
+        renderRouteButtons();
+      }
+
+      render();
+    </script>
+  </body>
+</html>
