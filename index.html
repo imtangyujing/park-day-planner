@@ -466,7 +466,7 @@
       }
 
       .spot-popup h2 {
-        margin: 6px 32px 8px 0;
+        margin: 6px 0 8px;
         font-size: 18px;
         line-height: 1.25;
       }
@@ -475,22 +475,6 @@
         display: flex;
         flex-wrap: wrap;
         gap: 6px;
-      }
-
-      .popup-close {
-        position: absolute;
-        top: 8px;
-        right: 8px;
-        display: grid;
-        place-items: center;
-        width: 28px;
-        height: 28px;
-        border: 0;
-        border-radius: 999px;
-        color: #475569;
-        background: #f1f5f9;
-        cursor: pointer;
-        font-weight: 900;
       }
 
       .popup-grid {
@@ -744,14 +728,8 @@
         }
 
         .spot-popup {
-          position: fixed;
-          left: 12px !important;
-          right: 12px;
-          top: auto !important;
-          bottom: 12px;
-          width: auto;
-          max-width: none;
-          max-height: 44vh;
+          width: min(320px, 44%);
+          max-height: 52vh;
           overflow: auto;
         }
 
@@ -1153,6 +1131,7 @@
       let activeRoute = "planA";
       let activeFilter = "all";
       let selectedId = "birthday";
+      let popupOpen = false;
 
       const byId = Object.fromEntries(spots.map((spot) => [spot.id, spot]));
       const parkMap = document.getElementById("parkMap");
@@ -1190,10 +1169,11 @@
           button.title = spot.name;
 
           if (!routeSet.has(spot.id)) button.classList.add("dim");
-          if (spot.id === selectedId) button.classList.add("selected");
+          if (popupOpen && spot.id === selectedId) button.classList.add("selected");
 
           button.addEventListener("click", () => {
             selectedId = spot.id;
+            popupOpen = true;
             render();
           });
 
@@ -1222,7 +1202,6 @@
         spotPopup.style.left = `${left}%`;
         spotPopup.style.top = `${top}%`;
         spotPopup.innerHTML = `
-          <button class="popup-close" type="button" aria-label="关闭详情">×</button>
           <div class="meta">
             <span class="tag">${typeLabels[spot.type]}</span>
             <span class="tag">${spot.area}</span>
@@ -1237,12 +1216,7 @@
             <div class="popup-row"><b>注意</b><span>${spot.tips}</span></div>
           </div>
         `;
-
-        spotPopup.querySelector(".popup-close").onclick = () => {
-          spotPopup.hidden = true;
-          document.querySelectorAll(".spot").forEach((node) => node.classList.remove("selected"));
-        };
-        spotPopup.hidden = false;
+        spotPopup.hidden = !popupOpen;
       }
 
       function renderFilters() {
@@ -1283,6 +1257,7 @@
           button.addEventListener("click", () => {
             selectedId = spot.id;
             activeFilter = "all";
+            popupOpen = true;
             render();
           });
           timeline.appendChild(button);
@@ -1302,6 +1277,7 @@
           button.onclick = () => {
             activeRoute = button.dataset.route;
             selectedId = routes[activeRoute].order[0];
+            popupOpen = false;
             render();
           };
         });
@@ -1316,6 +1292,13 @@
         renderTimeline();
         renderRouteButtons();
       }
+
+      parkMap.addEventListener("click", (event) => {
+        if (event.target.closest(".spot") || event.target.closest(".spot-popup")) return;
+        popupOpen = false;
+        spotPopup.hidden = true;
+        document.querySelectorAll(".spot").forEach((node) => node.classList.remove("selected"));
+      });
 
       render();
     </script>
