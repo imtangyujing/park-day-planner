@@ -465,8 +465,29 @@
         transform: rotate(45deg);
       }
 
+      .popup-backdrop {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        background: rgba(15, 23, 42, 0.18);
+        backdrop-filter: blur(1px);
+      }
+
+      .spot-popup.modal {
+        left: 50% !important;
+        top: 50% !important;
+        width: min(390px, calc(100% - 32px));
+        max-height: min(72vh, 560px);
+        overflow: auto;
+        transform: translate(-50%, -50%);
+      }
+
+      .spot-popup.modal::before {
+        display: none;
+      }
+
       .spot-popup h2 {
-        margin: 6px 0 8px;
+        margin: 6px 32px 8px 0;
         font-size: 18px;
         line-height: 1.25;
       }
@@ -475,6 +496,23 @@
         display: flex;
         flex-wrap: wrap;
         gap: 6px;
+      }
+
+      .popup-close {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        display: grid;
+        place-items: center;
+        width: 30px;
+        height: 30px;
+        border: 0;
+        border-radius: 999px;
+        color: #475569;
+        background: #f1f5f9;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: 900;
       }
 
       .popup-grid {
@@ -721,20 +759,19 @@
 
         .map-scroll {
           padding: 10px;
+          overflow: hidden;
+          touch-action: none;
         }
 
         .park-map {
-          min-width: 680px;
+          min-width: 0;
+          width: 100%;
+          transform-origin: 0 0;
+          will-change: transform;
         }
 
         .spot-popup {
-          width: min(320px, 44%);
-          max-height: 52vh;
-          overflow: auto;
-        }
-
-        .spot-popup::before {
-          display: none;
+          width: min(390px, calc(100% - 28px));
         }
       }
     </style>
@@ -778,7 +815,8 @@
               <polyline class="route-path planA" id="routePathA" points=""></polyline>
               <polyline class="route-path planB" id="routePathB" points=""></polyline>
             </svg>
-            <article class="spot-popup" id="spotPopup" aria-live="polite"></article>
+            <div class="popup-backdrop" id="popupBackdrop" hidden></div>
+            <article class="spot-popup modal" id="spotPopup" aria-live="polite" hidden></article>
             <div class="legend" aria-label="图例">
               <span class="tag"><span class="dot ride"></span>项目</span>
               <span class="tag"><span class="dot show"></span>演出</span>
@@ -820,15 +858,11 @@
             "globe",
             "forbidden-journey",
             "three-broomsticks",
-            "flight-hippogriff",
-            "ollivanders",
             "decepticoaster",
             "allspark",
             "jurassic-adventure",
             "hammond",
-            "nublar-slush",
             "waterworld-show",
-            "minion-mayhem",
             "untrainable",
             "hogwarts-castle"
           ]
@@ -843,14 +877,11 @@
             "allspark",
             "decepticoaster",
             "forbidden-journey",
-            "flight-hippogriff",
             "three-broomsticks",
             "waterworld-show",
             "jurassic-adventure",
             "hammond",
-            "nublar-slush",
-            "hogwarts-castle",
-            "ollivanders"
+            "hogwarts-castle"
           ]
         }
       };
@@ -900,36 +931,6 @@
           tips: "Plan B 也必须保留这个点。中午如果排队比早高峰低，就在哈利波特区解决。",
           planA: { time: "08:10-09:00", note: "早起成功第一目标。" },
           planB: { time: "11:30-12:30", note: "变形金刚后回哈利波特，中午错峰玩必去项。" }
-        },
-        {
-          id: "flight-hippogriff",
-          name: "鹰马的飞行",
-          area: "哈利波特的魔法世界",
-          type: "ride",
-          x: 91,
-          y: 52,
-          priority: "顺路",
-          summary: "哈利波特区顺路刷的小项目。",
-          recommended: "禁忌之旅后",
-          budget: "门票内",
-          tips: "如果排队不短，可以直接跳过，把时间留给大项和餐厅。",
-          planA: { time: "10:05-10:40", note: "顺路刷，排长就放弃。" },
-          planB: { time: "12:30-12:50", note: "只在排队短时顺路补，不要影响午餐。" }
-        },
-        {
-          id: "ollivanders",
-          name: "奥利凡德",
-          area: "哈利波特的魔法世界",
-          type: "show",
-          x: 81,
-          y: 50,
-          priority: "可选互动",
-          summary: "互动魔杖体验。",
-          recommended: "哈利波特区内顺路",
-          budget: "购买魔杖另算",
-          tips: "如果朋友对魔杖互动感兴趣就留；否则不必牺牲热门项目时间。",
-          planA: { time: "10:50-11:20", note: "餐前或餐后顺路。" },
-          planB: { time: "18:50-19:10", note: "晚间轻量补充，有演出/灯光则优先看演出。" }
         },
         {
           id: "three-broomsticks",
@@ -1002,7 +1003,7 @@
           summary: "真实感强，热门大项之一。",
           recommended: "午后错峰",
           budget: "门票内",
-          tips: "可和哈蒙德餐厅、努布拉沙冰组合成侏罗纪区域停留。",
+          tips: "可和哈蒙德餐厅组合成侏罗纪区域停留；如果时间紧，侏罗纪只保留大冒险。",
           planA: { time: "13:45-14:20", note: "午饭后进入侏罗纪。" },
           planB: { time: "15:00-15:50", note: "未来水世界后如果有时间再去侏罗纪。" }
         },
@@ -1020,21 +1021,6 @@
           tips: "推荐川味炸鸡小汉堡、哈蒙德汉堡、黑松露奶油牛肉意面。可先取号再刷项目，座位只保留 10 分钟。",
           planA: { time: "14:20-15:00", note: "如果三把扫帚只轻食，这里补正餐。" },
           planB: { time: "15:50-16:25", note: "侏罗纪后逛一下；如果三把扫帚吃饱，这里只当备选。" }
-        },
-        {
-          id: "nublar-slush",
-          name: "努布拉沙冰",
-          area: "侏罗纪世界努布拉岛",
-          type: "food",
-          x: 61,
-          y: 58,
-          priority: "补给",
-          summary: "青苹果味雪泥被推荐。",
-          recommended: "下午",
-          budget: "约 ¥40-60",
-          tips: "适合作为侏罗纪区域结束后的冷饮补给，别和正餐饮品重复花钱。",
-          planA: { time: "15:00-15:10", note: "转场前补给。" },
-          planB: { time: "16:25-16:40", note: "侏罗纪区域补给，推荐青苹果味雪泥。" }
         },
         {
           id: "waterworld-show",
@@ -1065,36 +1051,6 @@
           tips: "当天场次不固定，要以官方 App 为准；若停演则改传奇现场/威震天合影。",
           planA: { time: "17:40-18:10", note: "有合适场次就插入。" },
           planB: { time: "16:20-16:50", note: "Plan B 的晚高峰缓冲。" }
-        },
-        {
-          id: "minion-mayhem",
-          name: "小黄人闹翻天",
-          area: "小黄人乐园",
-          type: "ride",
-          x: 62,
-          y: 78,
-          priority: "轻松项目",
-          summary: "适合下午降低强度。",
-          recommended: "下午",
-          budget: "门票内",
-          tips: "排队太长时可只拍照逛周边，不必硬刷。",
-          planA: { time: "15:05-15:30", note: "侏罗纪后切轻松项目。" },
-          planB: { time: "09:30-10:00", note: "起晚后先从右转/逆时针轻项目开局。" }
-        },
-        {
-          id: "minion-land",
-          name: "小黄人乐园拍照区",
-          area: "小黄人乐园",
-          type: "photo",
-          x: 66,
-          y: 72,
-          priority: "出片",
-          summary: "颜色明亮，适合朋友生日氛围照。",
-          recommended: "上午 / 下午",
-          budget: "免费",
-          tips: "Plan B 开局可先轻松拍，别在商店停太久。",
-          planA: { time: "15:30-15:45", note: "项目后快拍。" },
-          planB: { time: "09:10-09:30", note: "起晚不焦虑，先进入状态。" }
         },
         {
           id: "kungfu-area",
@@ -1132,11 +1088,24 @@
       let activeFilter = "all";
       let selectedId = "birthday";
       let popupOpen = false;
+      const mapZoom = {
+        scale: 1,
+        x: 0,
+        y: 0,
+        startScale: 1,
+        startX: 0,
+        startY: 0,
+        startDistance: 0,
+        startCenter: null,
+        panStart: null
+      };
 
       const byId = Object.fromEntries(spots.map((spot) => [spot.id, spot]));
       const parkMap = document.getElementById("parkMap");
+      const mapScroll = document.querySelector(".map-scroll");
       const detail = document.getElementById("detail");
       const spotPopup = document.getElementById("spotPopup");
+      const popupBackdrop = document.getElementById("popupBackdrop");
       const timeline = document.getElementById("timeline");
       const filters = document.getElementById("filters");
       const routeIntro = document.getElementById("routeIntro");
@@ -1196,12 +1165,9 @@
         const spot = byId[selectedId] || spots[0];
         const isInActiveRoute = routes[activeRoute].order.includes(spot.id);
         const routeInfo = isInActiveRoute ? spot[activeRoute] || {} : {};
-        const left = Math.min(Math.max(spot.x + 2, 2), 64);
-        const top = Math.min(Math.max(spot.y - 28, 4), 72);
 
-        spotPopup.style.left = `${left}%`;
-        spotPopup.style.top = `${top}%`;
         spotPopup.innerHTML = `
+          <button class="popup-close" type="button" aria-label="关闭详情">×</button>
           <div class="meta">
             <span class="tag">${typeLabels[spot.type]}</span>
             <span class="tag">${spot.area}</span>
@@ -1217,6 +1183,8 @@
           </div>
         `;
         spotPopup.hidden = !popupOpen;
+        popupBackdrop.hidden = !popupOpen;
+        spotPopup.querySelector(".popup-close").onclick = closePopup;
       }
 
       function renderFilters() {
@@ -1293,12 +1261,118 @@
         renderRouteButtons();
       }
 
-      parkMap.addEventListener("click", (event) => {
-        if (event.target.closest(".spot") || event.target.closest(".spot-popup")) return;
+      function isMobileMap() {
+        return window.matchMedia("(max-width: 980px)").matches;
+      }
+
+      function clampMapPan() {
+        const viewport = mapScroll.getBoundingClientRect();
+        const baseX = parkMap.offsetLeft;
+        const baseY = parkMap.offsetTop;
+        const availableWidth = viewport.width - baseX * 2;
+        const availableHeight = viewport.height - baseY * 2;
+        const mapWidth = parkMap.offsetWidth * mapZoom.scale;
+        const mapHeight = parkMap.offsetHeight * mapZoom.scale;
+        const minX = Math.min(0, availableWidth - mapWidth);
+        const minY = Math.min(0, availableHeight - mapHeight);
+
+        mapZoom.x = Math.min(0, Math.max(minX, mapZoom.x));
+        mapZoom.y = Math.min(0, Math.max(minY, mapZoom.y));
+
+        if (mapZoom.scale === 1) {
+          mapZoom.x = 0;
+          mapZoom.y = 0;
+        }
+      }
+
+      function applyMapTransform() {
+        clampMapPan();
+        parkMap.style.transform = `translate(${mapZoom.x}px, ${mapZoom.y}px) scale(${mapZoom.scale})`;
+      }
+
+      function touchDistance(touches) {
+        return Math.hypot(
+          touches[0].clientX - touches[1].clientX,
+          touches[0].clientY - touches[1].clientY
+        );
+      }
+
+      function touchCenter(touches) {
+        return {
+          x: (touches[0].clientX + touches[1].clientX) / 2,
+          y: (touches[0].clientY + touches[1].clientY) / 2
+        };
+      }
+
+      mapScroll.addEventListener("touchstart", (event) => {
+        if (!isMobileMap()) return;
+
+        if (event.touches.length === 2) {
+          const rect = parkMap.getBoundingClientRect();
+          const center = touchCenter(event.touches);
+
+          mapZoom.startScale = mapZoom.scale;
+          mapZoom.startX = mapZoom.x;
+          mapZoom.startY = mapZoom.y;
+          mapZoom.startDistance = touchDistance(event.touches);
+          mapZoom.startCenter = {
+            screenX: center.x,
+            screenY: center.y,
+            mapX: (center.x - rect.left) / mapZoom.scale,
+            mapY: (center.y - rect.top) / mapZoom.scale
+          };
+        } else if (event.touches.length === 1 && mapZoom.scale > 1) {
+          mapZoom.panStart = {
+            screenX: event.touches[0].clientX,
+            screenY: event.touches[0].clientY,
+            x: mapZoom.x,
+            y: mapZoom.y
+          };
+        }
+      }, { passive: true });
+
+      mapScroll.addEventListener("touchmove", (event) => {
+        if (!isMobileMap()) return;
+
+        if (event.touches.length === 2 && mapZoom.startCenter) {
+          event.preventDefault();
+          const center = touchCenter(event.touches);
+          const nextScale = mapZoom.startScale * (touchDistance(event.touches) / mapZoom.startDistance);
+          mapZoom.scale = Math.min(3, Math.max(1, nextScale));
+          const viewport = mapScroll.getBoundingClientRect();
+          mapZoom.x = center.x - viewport.left - parkMap.offsetLeft - mapZoom.startCenter.mapX * mapZoom.scale;
+          mapZoom.y = center.y - viewport.top - parkMap.offsetTop - mapZoom.startCenter.mapY * mapZoom.scale;
+          applyMapTransform();
+        } else if (event.touches.length === 1 && mapZoom.panStart && mapZoom.scale > 1) {
+          event.preventDefault();
+          mapZoom.x = mapZoom.panStart.x + event.touches[0].clientX - mapZoom.panStart.screenX;
+          mapZoom.y = mapZoom.panStart.y + event.touches[0].clientY - mapZoom.panStart.screenY;
+          applyMapTransform();
+        }
+      }, { passive: false });
+
+      mapScroll.addEventListener("touchend", () => {
+        mapZoom.startCenter = null;
+        mapZoom.panStart = null;
+      });
+
+      window.addEventListener("resize", () => {
+        if (!isMobileMap()) {
+          mapZoom.scale = 1;
+          mapZoom.x = 0;
+          mapZoom.y = 0;
+        }
+        applyMapTransform();
+      });
+
+      function closePopup() {
         popupOpen = false;
         spotPopup.hidden = true;
+        popupBackdrop.hidden = true;
         document.querySelectorAll(".spot").forEach((node) => node.classList.remove("selected"));
-      });
+      }
+
+      popupBackdrop.addEventListener("click", closePopup);
 
       render();
     </script>
