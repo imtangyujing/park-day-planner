@@ -694,18 +694,17 @@
       }
 
       .legend {
-        position: absolute;
-        left: 12px;
-        bottom: 12px;
-        z-index: 4;
         display: flex;
         flex-wrap: wrap;
+        justify-content: center;
         gap: 6px;
-        max-width: 46%;
-        padding: 8px;
-        border: 1px solid rgba(148, 163, 184, 0.5);
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.88);
+        width: min(1120px, 100%);
+        min-width: 760px;
+        margin: 8px auto 0;
+        padding: 5px 8px;
+        border: 1px solid rgba(148, 163, 184, 0.45);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.78);
       }
 
       .dot {
@@ -770,6 +769,19 @@
           will-change: transform;
         }
 
+        .legend {
+          min-width: 0;
+          width: 100%;
+          margin-top: 6px;
+          padding: 4px 6px;
+          gap: 4px;
+        }
+
+        .legend .tag {
+          padding: 3px 6px;
+          font-size: 11px;
+        }
+
         .spot-popup {
           width: min(390px, calc(100% - 28px));
         }
@@ -817,13 +829,13 @@
             </svg>
             <div class="popup-backdrop" id="popupBackdrop" hidden></div>
             <article class="spot-popup modal" id="spotPopup" aria-live="polite" hidden></article>
-            <div class="legend" aria-label="图例">
-              <span class="tag"><span class="dot ride"></span>项目</span>
-              <span class="tag"><span class="dot show"></span>演出</span>
-              <span class="tag"><span class="dot food"></span>餐厅</span>
-              <span class="tag"><span class="dot photo"></span>拍照</span>
-              <span class="tag"><span class="dot service"></span>服务</span>
-            </div>
+          </div>
+          <div class="legend" aria-label="图例">
+            <span class="tag"><span class="dot ride"></span>项目</span>
+            <span class="tag"><span class="dot show"></span>演出</span>
+            <span class="tag"><span class="dot food"></span>餐厅</span>
+            <span class="tag"><span class="dot photo"></span>拍照</span>
+            <span class="tag"><span class="dot service"></span>服务</span>
           </div>
         </div>
       </section>
