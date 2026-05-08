@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>北京环球影城互动攻略</title>
+    <title>⚡北京环球影城魔法攻略 — 霍格沃茨级作战羊皮卷</title>
     <style>
       :root {
         --ink: #4b3924;
@@ -992,12 +992,12 @@
       <section class="map-shell" aria-label="互动地图">
         <header class="topbar">
           <div class="title">
-            <h1>北京环球影城作战地图</h1>
+            <h1>⚡北京环球影城魔法巡游地图🗺️</h1>
             <p id="routeIntro"></p>
           </div>
           <div class="route-toggle" aria-label="路线切换">
-            <button class="active" type="button" data-route="planA">Plan A 早起</button>
-            <button type="button" data-route="planB">Plan B 起晚</button>
+            <button class="active" type="button" data-route="planA">⚡Plan A 格兰芬多冲锋</button>
+            <button type="button" data-route="planB">🌙Plan B 斯莱特林智取</button>
           </div>
         </header>
 
@@ -1011,11 +1011,11 @@
             <article class="spot-popup modal" id="spotPopup" aria-live="polite" hidden></article>
           </div>
           <div class="legend" aria-label="图例">
-            <span class="tag"><span class="dot ride"></span>项目</span>
-            <span class="tag"><span class="dot show"></span>演出</span>
-            <span class="tag"><span class="dot food"></span>餐厅</span>
-            <span class="tag"><span class="dot photo"></span>拍照</span>
-            <span class="tag"><span class="dot service"></span>服务</span>
+            <span class="tag"><span class="dot ride"></span>🧹骑扫帚</span>
+            <span class="tag"><span class="dot show"></span>🎭魔法秀</span>
+            <span class="tag"><span class="dot food"></span>🍺魔药食堂</span>
+            <span class="tag"><span class="dot photo"></span>📸留影点</span>
+            <span class="tag"><span class="dot service"></span>🔮服务站</span>
           </div>
         </div>
       </section>
@@ -1024,7 +1024,7 @@
         <section class="detail" id="detail"></section>
         <nav class="chip-row" id="filters" aria-label="点位类型筛选"></nav>
         <section class="timeline">
-          <h3 id="timelineTitle">当天时间轴</h3>
+          <h3 id="timelineTitle">🪄当天魔法时间轴</h3>
           <div class="timeline-list" id="timeline"></div>
         </section>
       </aside>
@@ -1032,27 +1032,27 @@
 
     <script>
       const typeLabels = {
-        all: "全部",
-        ride: "项目",
-        show: "演出",
-        food: "餐厅",
-        photo: "拍照",
-        service: "服务"
+        all: "✨全部",
+        ride: "🧹骑扫帚",
+        show: "🎭魔法秀",
+        food: "🍺魔药食堂",
+        photo: "📸留影点",
+        service: "🔮服务站"
       };
 
       const typeIcons = {
-        all: "✦",
-        ride: "✸",
-        show: "✩",
-        food: "♜",
-        photo: "✿",
-        service: "✥"
+        all: "✨",
+        ride: "🧹",
+        show: "🎭",
+        food: "🍺",
+        photo: "📸",
+        service: "🔮"
       };
 
       const routes = {
         planA: {
-          title: "Plan A：提前入园，先冲哈利波特",
-          intro: "8 点左右入园成功时使用；先解决哈利波特热门项目，后面顺路补园区重点。",
+          title: "⚡Plan A：像格兰芬多一样，天亮就冲！",
+          intro: "早起的巫师有猫头鹰送信🦉 8点入园直奔霍格沃茨，先拿下禁忌之旅，后面一路骑着扫帚顺风收割✨",
           color: "red",
           order: [
             "birthday",
@@ -1070,8 +1070,8 @@
           ]
         },
         planB: {
-          title: "Plan B：起晚先变形金刚，中午回哈利波特",
-          intro: "错过提前入园时使用；先去变形金刚消化早高峰，中午回哈利波特玩必去项目并吃三把扫帚。",
+          title: "🌙Plan B：斯莱特林式精明，晚起照样赢麻",
+          intro: "起晚了也别慌，用斯莱特林的智慧先去变形金刚消耗麻瓜们的早高峰🐍 中午杀回霍格沃茨收割战利品，三把扫帚的黄油啤酒在等你🍺",
           color: "blue",
           order: [
             "birthday",
@@ -1093,198 +1093,198 @@
       const spots = [
         {
           id: "birthday",
-          name: "开局小仪式",
+          name: "🗝️开局秘密仪式",
           area: "入口右侧",
           type: "service",
           x: 39,
           y: 72,
-          priority: "暗号任务",
-          summary: "入园后先完成一个小默契。",
+          priority: "⚡暗号任务",
+          summary: "每位巫师入园前都有一个秘密使命要完成🤫",
           recommended: "入园后第一站",
           budget: "免费",
-          tips: "检票口右边那个地方。你知道要做什么，别声张，顺路完成就好。",
-          planA: { time: "08:00-08:05", note: "提前入园后先完成暗号任务，别回头补。" },
-          planB: { time: "09:00-09:05", note: "起晚也先完成，不影响后续体验。" }
+          tips: "检票口右边那个地方——你懂的！像接头暗号一样，别声张，顺路完成就好✨ 这是属于我们的小默契～",
+          planA: { time: "08:00-08:05", note: "入园后第一件事！完成暗号任务，别回头补🗝️" },
+          planB: { time: "09:00-09:05", note: "晚起也要先完成秘密仪式，巫师的默契不能丢🤫" }
         },
         {
           id: "globe",
-          name: "环球大地球",
+          name: "📸环球大地球",
           area: "入口",
           type: "photo",
           x: 24,
           y: 67,
-          priority: "经典拍照",
-          summary: "入园仪式感点位。",
+          priority: "🌍仪式感打卡",
+          summary: "每一段冒险都要有一个起点，这里就是你的九又四分之三站台✨",
           recommended: "入园 / 离园",
           budget: "免费",
-          tips: "早上可以快速拍一张，别在这里消耗太久；晚上离园再补也可以。",
-          planA: { time: "08:05-08:10", note: "快拍后直奔哈利波特。" },
-          planB: { time: "09:05-09:10", note: "快拍后直接去变形金刚，不在入口区耗时。" }
+          tips: "早上快速咔嚓一张就走，别在这里恋战！晚上离园时灯光更美，可以再补一张夜景版🌙",
+          planA: { time: "08:05-08:10", note: "快拍一张仪式感照片，然后骑上扫帚直奔霍格沃茨🧹" },
+          planB: { time: "09:05-09:10", note: "速拍后直接幻影移形去变形金刚基地⚡" }
         },
         {
           id: "forbidden-journey",
-          name: "哈利波特与禁忌之旅",
+          name: "⚡哈利波特与禁忌之旅",
           area: "哈利波特的魔法世界",
           type: "ride",
           x: 86,
           y: 35,
-          priority: "必玩 NO.1",
-          summary: "最核心项目，早起成功就先冲。",
+          priority: "🏰必玩 NO.1",
+          summary: "整个园区最强魔法体验！就像收到霍格沃茨录取通知书那一刻🦉",
           recommended: "提前入园 / 中午错峰",
           budget: "门票内",
-          tips: "厕所能听见哭声。",
-          planA: { time: "08:10-09:00", note: "早起成功第一目标。" },
-          planB: { time: "11:30-12:30", note: "变形金刚后回哈利波特，中午错峰玩必去项。" }
+          tips: "排队时留心听——据说厕所里能听见哭泣的桃金娘👻 这趟旅程值得你跑着去抢！",
+          planA: { time: "08:10-09:00", note: "格兰芬多式冲锋！早起就是为了这一刻🏰⚡" },
+          planB: { time: "11:30-12:30", note: "斯莱特林式迂回——中午错峰杀回霍格沃茨，人少体验翻倍🐍" }
         },
         {
           id: "three-broomsticks",
-          name: "三把扫帚",
+          name: "🍺三把扫帚餐厅",
           area: "哈利波特的魔法世界",
           type: "food",
           x: 82,
           y: 41,
-          priority: "氛围餐厅",
-          summary: "湖景位可和霍格沃茨城堡同框。",
+          priority: "🧙‍♂️魔法氛围餐厅",
+          summary: "坐在湖景位，一边喝黄油啤酒一边望着霍格沃茨城堡，这不就是魔法人生吗🏰🍺",
           recommended: "10:30 前后 / 12:50 后 / 17:30-18:00",
           budget: "约 ¥100-160/人",
-          tips: "推荐烤鸡排骨拼盘、黄油啤酒、蜜雪乌龙茶。中午高峰会爆；室外出片但冷时可转室内。",
-          planA: { time: "10:20-11:00", note: "10:30 开门前后吃早午餐，争取湖景位。" },
-          planB: { time: "12:50-13:50", note: "中午在哈利波特区吃饭，优先争取湖景位。" }
+          tips: "必点黄油啤酒和烤鸡排骨拼盘！湖景位是灵魂——可以和城堡同框📸 中午麻瓜太多会爆满，错峰去才是真巫师的智慧🧙‍♂️",
+          planA: { time: "10:20-11:00", note: "10:30开门前蹲守，抢到湖景位就是今日最佳魔法🍺✨" },
+          planB: { time: "12:50-13:50", note: "中午在霍格沃茨地盘吃饭，湖景位必须争取🏰" }
         },
         {
           id: "hogwarts-castle",
-          name: "霍格沃茨城堡",
+          name: "🏰霍格沃茨城堡",
           area: "哈利波特的魔法世界",
           type: "photo",
           x: 91,
           y: 31,
-          priority: "必拍",
-          summary: "白天和夜晚都值得拍。",
+          priority: "✨必拍圣地",
+          summary: "白天庄严肃穆，夜晚灯光璀璨——两个版本都值得收藏🌟",
           recommended: "早上人少 / 晚间灯光",
           budget: "免费",
-          tips: "灯光秀是否开放要以当天 App 为准。湖边角度更稳。",
-          planA: { time: "18:30-19:00", note: "晚间收尾，补灯光和合照。" },
-          planB: { time: "18:20-18:50", note: "晚上回哈利波特，看灯光/拍城堡/收尾。" }
+          tips: "湖边角度最稳最出片！灯光秀要看当天App，开了的话就是最高级别的魔法时刻🪄✨",
+          planA: { time: "18:30-19:00", note: "一天冒险的终章🌙 在城堡灯光下拍最后一张合照吧✨" },
+          planB: { time: "18:20-18:50", note: "傍晚回到霍格沃茨，看灯光、拍城堡，完美收官🏰🌙" }
         },
         {
           id: "decepticoaster",
-          name: "霸天虎过山车",
+          name: "🎢霸天虎过山车",
           area: "变形金刚基地",
           type: "ride",
           x: 20,
           y: 27,
-          priority: "刺激党必冲",
-          summary: "园区刺激强度代表。",
+          priority: "💥勇气测试",
+          summary: "就像对付匈牙利树蜂龙一样——需要真正的格兰芬多勇气🐉",
           recommended: "上午 / 饭点错峰",
           budget: "门票内",
-          tips: "不坐刺激项目的人可以在附近休息或拍照，避免强行陪排。",
-          planA: { time: "11:20-12:00", note: "从哈利波特出来后冲。" },
-          planB: { time: "10:20-11:20", note: "火种源后看排队和体力，刺激党再冲。" }
+          tips: "不敢骑的小伙伴可以在旁边喝杯南瓜汁等着，千万别硬上！勇气不是逞强🧡",
+          planA: { time: "11:20-12:00", note: "从霍格沃茨幻影移形过来，趁热打铁冲一波💥" },
+          planB: { time: "10:20-11:20", note: "火种源后看体力和排队情况，勇士们再冲🐉" }
         },
         {
           id: "allspark",
-          name: "变形金刚：火种源争夺战",
+          name: "🤖火种源争夺战",
           area: "变形金刚基地",
           type: "ride",
           x: 27,
           y: 31,
-          priority: "必玩",
-          summary: "沉浸感强，适合大多数人。",
+          priority: "⭐必玩",
+          summary: "沉浸感拉满，就像进了有求必应屋——每个人都能找到自己的快乐🪄",
           recommended: "霸天虎前后",
           budget: "门票内",
-          tips: "如果霸天虎有人不坐，这个更适合作为共同项目。",
-          planA: { time: "12:05-12:50", note: "接在霸天虎后。" },
-          planB: { time: "09:20-10:20", note: "起晚后的第一个大项，先避开哈利波特早高峰。" }
+          tips: "如果有人不敢坐霸天虎，这个是全队都能开心的共同项目！友谊万岁🤝",
+          planA: { time: "12:05-12:50", note: "霸天虎之后接上，一鼓作气✨" },
+          planB: { time: "09:20-10:20", note: "晚起后的第一个大项目！先避开霍格沃茨的早高峰人潮🌊" }
         },
         {
           id: "jurassic-adventure",
-          name: "侏罗纪世界大冒险",
+          name: "🦕侏罗纪世界大冒险",
           area: "侏罗纪世界努布拉岛",
           type: "ride",
           x: 42,
           y: 43,
-          priority: "必玩",
-          summary: "真实感强，热门大项之一。",
+          priority: "🦖必玩",
+          summary: "比海格养的所有神奇动物加起来还刺激！真实感爆表的大项目🔥",
           recommended: "午后错峰",
           budget: "门票内",
-          tips: "可和哈蒙德餐厅组合成侏罗纪区域停留；如果时间紧，侏罗纪只保留大冒险。",
-          planA: { time: "13:45-14:20", note: "午饭后进入侏罗纪。" },
-          planB: { time: "15:00-15:50", note: "下午先完成项目，演出放到后面按场次插入。" }
+          tips: "可以和旁边的哈蒙德餐厅打个combo——先冒险后干饭，侏罗纪区域一网打尽🦕",
+          planA: { time: "13:45-14:20", note: "午饭后进入侏罗纪世界，准备迎接恐龙的热情🦖" },
+          planB: { time: "15:00-15:50", note: "下午先搞定项目，演出场次后面再穿插进来🎭" }
         },
         {
           id: "hammond",
-          name: "哈蒙德餐厅",
+          name: "🍖哈蒙德餐厅",
           area: "侏罗纪世界努布拉岛",
           type: "food",
           x: 45,
           y: 49,
-          priority: "正餐备选",
-          summary: "适合多人分享，菜品比快餐更完整。",
+          priority: "🍔能量补给站",
+          summary: "像霍格沃茨大厅的开学晚宴一样丰盛！适合全队分享的正餐🍽️",
           recommended: "11:00 前 / 14:00 后",
           budget: "约 ¥140-170/人",
-          tips: "推荐川味炸鸡小汉堡、哈蒙德汉堡、黑松露奶油牛肉意面。可先取号再刷项目，座位只保留 10 分钟。",
-          planA: { time: "14:20-15:00", note: "如果三把扫帚只轻食，这里补正餐。" },
-          planB: { time: "15:50-16:25", note: "侏罗纪后逛一下；如果三把扫帚吃饱，这里只当备选。" }
+          tips: "推荐川味炸鸡小汉堡和黑松露意面🤤 可以先取号再去刷项目，但座位只保留10分钟——比金色飞贼还难抓！",
+          planA: { time: "14:20-15:00", note: "三把扫帚只喝了黄油啤酒的话，这里补一顿正餐🍖" },
+          planB: { time: "15:50-16:25", note: "侏罗纪后休息充电；三把扫帚吃饱了就当备选～" }
         },
         {
           id: "waterworld-show",
-          name: "未来水世界表演",
+          name: "🌊未来水世界表演",
           area: "未来水世界",
           type: "show",
           x: 75,
           y: 16,
-          priority: "必看演出",
-          summary: "重点表演项目，刷完下午项目后按当天场次去看。",
+          priority: "🎭必看大秀",
+          summary: "比三强争霸赛还震撼的水上魔法表演！坐着休息还能看大场面，双倍快乐🌊🔥",
           recommended: "下午项目后 / 以 App 场次为准",
           budget: "门票内",
-          tips: "前排有湿身风险。没有固定时间，当天表演排期必须进官方 App 核对。",
-          planA: { time: "项目后看场次", note: "下午项目基本完成后去看，作为坐着休息的表演段。" },
-          planB: { time: "项目后看场次", note: "侏罗纪和餐厅结束后再去，按官方 App 选最近合适场次。" }
+          tips: "前排会被水花洗礼——像被皮皮鬼泼了水球一样💦 没有固定时间，一定要看官方App当天排期！",
+          planA: { time: "项目后看场次", note: "下午项目刷完后来看，坐着休息顺便体验水上魔法🌊" },
+          planB: { time: "项目后看场次", note: "侏罗纪和餐厅结束后，App上选最近的场次去看💦" }
         },
         {
           id: "untrainable",
-          name: "不可驯服",
+          name: "🐉不可驯服",
           area: "好莱坞 / 表演区",
           type: "show",
           x: 24,
           y: 54,
-          priority: "演出备选",
-          summary: "下午项目完成后的表演休息段，按当天排期决定。",
+          priority: "🎭演出备选",
+          summary: "像驯服鹰头马身有翼兽一样——这个表演不按常理出牌，按当天排期决定✨",
           recommended: "下午项目后 / 以 App 场次为准",
           budget: "门票内",
-          tips: "没有固定时间，要以官方 App 当日场次为准；若停演则改传奇现场/威震天合影。",
-          planA: { time: "项目后看场次", note: "未来水世界前后都可以，下午项目结束后看哪个场次顺。" },
-          planB: { time: "项目后看场次", note: "未来水世界前后都可以，作为刷完项目后的表演缓冲。" }
+          tips: "时间不固定要看官方App！如果停演了就去找威震天拍照或者看传奇现场，不亏🤖",
+          planA: { time: "项目后看场次", note: "和未来水世界灵活搭配，哪个场次顺就先看哪个🎭" },
+          planB: { time: "项目后看场次", note: "项目刷完后的魔法间歇时间，看哪场顺路就去🌟" }
         },
         {
           id: "kungfu-area",
-          name: "功夫熊猫馆",
+          name: "🐼功夫熊猫馆",
           area: "功夫熊猫盖世之地",
           type: "photo",
           x: 56,
           y: 19,
-          priority: "室内缓冲",
-          summary: "天气冷或累时适合作为缓冲区。",
+          priority: "🍵休息缓冲区",
+          summary: "就像霍格沃茨的公共休息室——累了冷了就来这里回血🧡",
           recommended: "上午中段 / 傍晚",
           budget: "看消费",
-          tips: "区域里有阿宝工坊、智慧仙桃树等，适合慢逛。",
-          planA: { time: "12:50-13:10", note: "若餐厅等待，可短暂停留。" },
-          planB: { time: "10:10-11:00", note: "起晚后先走逆时针，不和哈利波特硬碰。" }
+          tips: "有阿宝工坊和智慧仙桃树，适合慢慢逛慢慢拍📸 是给双腿施复活咒的好地方🪄",
+          planA: { time: "12:50-13:10", note: "等餐厅的间隙来逛逛，给双腿施个恢复咒🪄" },
+          planB: { time: "10:10-11:00", note: "晚起后走逆时针路线，不和霍格沃茨的人潮硬碰🐼" }
         },
         {
           id: "citywalk-shop",
-          name: "环球大门左手边商店",
+          name: "🛍️魔法纪念品商店",
           area: "好莱坞 / 出入口",
           type: "service",
           x: 28,
           y: 63,
-          priority: "购物收尾",
-          summary: "所有主题商品较集中。",
+          priority: "🧳战利品收割",
+          summary: "所有主题商品都在这里，就像对角巷的一站式购物体验🪄",
           recommended: "离园前",
           budget: "按需",
-          tips: "建议最后买，避免背一天。若巡游停演，可改成威震天合影或传奇现场。",
-          planA: { time: "19:00-19:30", note: "最后统一买，避免背一天。" },
-          planB: { time: "19:15-19:40", note: "最后统一买，降低负担。" }
+          tips: "最后再买！背一天魔杖和周边会累成家养小精灵🧦 巡游停了就改去找威震天合影～",
+          planA: { time: "19:00-19:30", note: "冒险结束，最后收割战利品！别提前买背一天🛍️" },
+          planB: { time: "19:15-19:40", note: "最后统一扫货，轻装上阵才是聪明的巫师🧙‍♂️" }
         }
       ];
 
