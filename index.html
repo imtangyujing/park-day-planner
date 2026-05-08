@@ -6,18 +6,18 @@
     <title>北京环球影城互动攻略</title>
     <style>
       :root {
-        --ink: #1f2933;
-        --muted: #637083;
-        --line: #d9e1ea;
-        --paper: #fbfaf7;
-        --panel: #ffffff;
-        --blue: #2563eb;
-        --red: #dc2626;
-        --amber: #d97706;
-        --green: #15803d;
-        --violet: #7c3aed;
-        --teal: #0f766e;
-        --shadow: 0 18px 50px rgba(31, 41, 51, 0.14);
+        --ink: #4b3924;
+        --muted: #7d6a4f;
+        --line: #c8ad78;
+        --paper: #f7edd6;
+        --panel: #fff7e6;
+        --blue: #276a82;
+        --red: #a84232;
+        --amber: #ad7a24;
+        --green: #5b7c3f;
+        --violet: #6b4f89;
+        --teal: #2f7280;
+        --shadow: 0 18px 45px rgba(83, 60, 28, 0.18);
       }
 
       * {
@@ -27,13 +27,16 @@
       body {
         margin: 0;
         min-height: 100vh;
+        overflow-x: hidden;
         color: var(--ink);
         background:
-          linear-gradient(180deg, rgba(248, 250, 252, 0.94), rgba(239, 246, 255, 0.88)),
-          #eef4f8;
+          radial-gradient(circle at 20% 10%, rgba(255, 252, 236, 0.9), transparent 32%),
+          radial-gradient(circle at 80% 0%, rgba(226, 196, 135, 0.28), transparent 30%),
+          linear-gradient(180deg, rgba(250, 239, 214, 0.96), rgba(237, 218, 179, 0.92)),
+          #ead7ac;
         font-family:
-          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          "PingFang SC", "Microsoft YaHei", sans-serif;
+          "Songti SC", "STSong", "Kaiti SC", Georgia, "Times New Roman", "PingFang SC",
+          "Microsoft YaHei", serif;
       }
 
       button {
@@ -41,17 +44,24 @@
       }
 
       .app {
+        width: min(1180px, 100%);
         min-height: 100vh;
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 380px;
-        gap: 16px;
-        padding: 16px;
+        grid-template-columns: 1fr;
+        gap: 18px;
+        margin: 0 auto;
+        padding: 18px;
       }
 
       .map-shell,
       .side {
-        background: rgba(255, 255, 255, 0.9);
-        border: 1px solid rgba(148, 163, 184, 0.35);
+        position: relative;
+        background:
+          linear-gradient(90deg, rgba(133, 91, 42, 0.05), transparent 14%, transparent 86%, rgba(133, 91, 42, 0.05)),
+          radial-gradient(circle at 12% 18%, rgba(178, 128, 54, 0.12), transparent 20%),
+          var(--paper);
+        border: 2px solid rgba(146, 111, 58, 0.48);
+        outline: 1px solid rgba(255, 250, 232, 0.8);
         box-shadow: var(--shadow);
       }
 
@@ -59,7 +69,7 @@
         display: flex;
         flex-direction: column;
         min-width: 0;
-        border-radius: 8px;
+        border-radius: 10px;
         overflow: hidden;
       }
 
@@ -68,31 +78,35 @@
         align-items: center;
         justify-content: space-between;
         gap: 12px;
-        padding: 12px;
-        border-bottom: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.96);
+        padding: 16px 20px 14px;
+        border-bottom: 1px solid rgba(146, 111, 58, 0.4);
+        background:
+          linear-gradient(180deg, rgba(255, 248, 226, 0.88), rgba(233, 211, 167, 0.62)),
+          var(--paper);
       }
 
       .title h1 {
         margin: 0;
-        font-size: 20px;
+        color: #4b3924;
+        font-size: 26px;
         line-height: 1.2;
+        letter-spacing: 0;
       }
 
       .title p {
-        margin: 4px 0 0;
+        margin: 6px 0 0;
         color: var(--muted);
-        font-size: 13px;
+        font-size: 14px;
       }
 
       .route-toggle {
         display: inline-grid;
         grid-template-columns: 1fr 1fr;
-        gap: 4px;
-        padding: 4px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: #f8fafc;
+        gap: 8px;
+        padding: 6px;
+        border: 1px solid rgba(146, 111, 58, 0.52);
+        border-radius: 999px;
+        background: rgba(255, 247, 226, 0.78);
       }
 
       .route-toggle button,
@@ -104,57 +118,58 @@
 
       .route-toggle button {
         min-width: 112px;
-        border-radius: 6px;
-        padding: 8px 10px;
+        border-radius: 999px;
+        padding: 9px 14px;
         color: var(--muted);
         background: transparent;
-        font-weight: 700;
+        font-weight: 800;
       }
 
       .route-toggle button.active[data-route="planA"] {
         color: #ffffff;
-        background: var(--red);
+        background: linear-gradient(180deg, #b6533f, var(--red));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
       }
 
       .route-toggle button.active[data-route="planB"] {
         color: #ffffff;
-        background: var(--blue);
+        background: linear-gradient(180deg, #3d7f96, var(--blue));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
       }
 
       .map-scroll {
         flex: 1;
         overflow: auto;
-        padding: 16px;
-        background: #d8ead1;
+        max-height: 540px;
+        padding: 20px;
+        background:
+          linear-gradient(180deg, rgba(103, 74, 33, 0.05), rgba(103, 74, 33, 0.1)),
+          #eadab7;
       }
 
       .park-map {
         position: relative;
-        width: min(1120px, 100%);
-        min-width: 760px;
-        aspect-ratio: 1.28;
+        width: min(760px, 100%);
+        min-width: 520px;
+        aspect-ratio: 1086 / 1448;
         margin: 0 auto;
         overflow: hidden;
         border: 2px solid #9bbf77;
         border-radius: 8px;
-        background:
-          radial-gradient(circle at 16% 18%, rgba(67, 126, 52, 0.18) 0 2px, transparent 3px),
-          radial-gradient(circle at 75% 28%, rgba(48, 112, 50, 0.18) 0 2px, transparent 3px),
-          radial-gradient(circle at 55% 74%, rgba(73, 135, 58, 0.18) 0 2px, transparent 3px),
-          linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(83, 139, 67, 0.08)),
-          #83bd5f;
-        background-size: 38px 38px, 44px 44px, 52px 52px, auto, auto;
-        box-shadow: inset 0 0 80px rgba(56, 93, 43, 0.22);
+        background: #72bf69;
+        box-shadow:
+          0 0 0 6px rgba(255, 247, 225, 0.82),
+          0 0 0 8px rgba(133, 91, 42, 0.34),
+          inset 0 0 80px rgba(56, 93, 43, 0.14);
       }
 
-      .park-map::before {
-        content: "";
+      .map-image {
         position: absolute;
-        inset: -8%;
-        background:
-          radial-gradient(ellipse at 76% 82%, rgba(54, 106, 49, 0.2), transparent 28%),
-          radial-gradient(ellipse at 28% 8%, rgba(54, 106, 49, 0.2), transparent 24%),
-          radial-gradient(ellipse at 94% 18%, rgba(54, 106, 49, 0.18), transparent 22%);
+        inset: 0;
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
         pointer-events: none;
       }
 
@@ -373,18 +388,18 @@
       .route-layer {
         position: absolute;
         inset: 0;
-        z-index: 2;
+        z-index: 3;
         pointer-events: none;
       }
 
       .route-path {
         fill: none;
-        stroke-width: 7;
+        stroke-width: 8;
         stroke-linecap: round;
         stroke-linejoin: round;
-        stroke-dasharray: 12 12;
-        opacity: 0.86;
-        filter: drop-shadow(0 4px 6px rgba(15, 23, 42, 0.22));
+        stroke-dasharray: 14 10;
+        opacity: 0.92;
+        filter: drop-shadow(0 4px 4px rgba(61, 38, 14, 0.28));
       }
 
       .route-path.planA {
@@ -397,19 +412,22 @@
 
       .spot {
         position: absolute;
-        z-index: 3;
-        width: 34px;
-        height: 34px;
+        z-index: 4;
+        width: 36px;
+        height: 36px;
         transform: translate(-50%, -50%);
         display: grid;
         place-items: center;
-        border: 2px solid #ffffff;
-        border-radius: 999px;
+        border: 2px solid rgba(255, 248, 226, 0.95);
+        border-radius: 999px 999px 999px 35%;
         color: #ffffff;
-        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.26);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.35),
+          0 8px 16px rgba(68, 43, 20, 0.32);
         cursor: pointer;
         font-size: 14px;
         font-weight: 900;
+        transform-origin: 50% 50%;
       }
 
       .spot[data-type="ride"] {
@@ -437,7 +455,7 @@
       }
 
       .spot.selected {
-        outline: 4px solid rgba(250, 204, 21, 0.8);
+        outline: 4px solid rgba(246, 210, 124, 0.88);
         transform: translate(-50%, -50%) scale(1.12);
       }
 
@@ -446,10 +464,11 @@
         z-index: 6;
         width: min(340px, 46%);
         padding: 14px;
-        border: 1px solid rgba(148, 163, 184, 0.55);
+        border: 1px solid rgba(146, 111, 58, 0.55);
         border-radius: 8px;
-        background: rgba(255, 255, 255, 0.96);
-        box-shadow: 0 22px 50px rgba(15, 23, 42, 0.22);
+        background:
+          linear-gradient(180deg, rgba(255, 250, 232, 0.97), rgba(242, 226, 190, 0.97));
+        box-shadow: 0 22px 50px rgba(68, 43, 20, 0.28);
       }
 
       .spot-popup::before {
@@ -459,9 +478,9 @@
         bottom: -9px;
         width: 18px;
         height: 18px;
-        background: rgba(255, 255, 255, 0.96);
-        border-right: 1px solid rgba(148, 163, 184, 0.55);
-        border-bottom: 1px solid rgba(148, 163, 184, 0.55);
+        background: rgba(255, 250, 232, 0.97);
+        border-right: 1px solid rgba(146, 111, 58, 0.55);
+        border-bottom: 1px solid rgba(146, 111, 58, 0.55);
         transform: rotate(45deg);
       }
 
@@ -469,7 +488,7 @@
         position: absolute;
         inset: 0;
         z-index: 5;
-        background: rgba(15, 23, 42, 0.18);
+        background: rgba(53, 35, 17, 0.22);
         backdrop-filter: blur(1px);
       }
 
@@ -488,6 +507,7 @@
 
       .spot-popup h2 {
         margin: 6px 32px 8px 0;
+        color: #4b3924;
         font-size: 18px;
         line-height: 1.25;
       }
@@ -509,7 +529,7 @@
         border: 0;
         border-radius: 999px;
         color: #475569;
-        background: #f1f5f9;
+        background: #efe2bf;
         cursor: pointer;
         font-size: 18px;
         font-weight: 900;
@@ -530,7 +550,7 @@
       }
 
       .popup-row b {
-        color: #64748b;
+        color: #84663e;
       }
 
       .tag {
@@ -539,14 +559,15 @@
         gap: 5px;
         padding: 4px 8px;
         border-radius: 999px;
-        color: #334155;
-        background: #f1f5f9;
+        color: #5b4328;
+        background: rgba(255, 248, 226, 0.82);
+        border: 1px solid rgba(146, 111, 58, 0.32);
         font-size: 12px;
         font-weight: 700;
       }
 
       .side {
-        border-radius: 8px;
+        border-radius: 10px;
         overflow: hidden;
         display: flex;
         flex-direction: column;
@@ -554,13 +575,55 @@
       }
 
       .detail {
-        padding: 16px;
-        border-bottom: 1px solid var(--line);
+        position: relative;
+        min-height: 132px;
+        padding: 22px 280px 22px 118px;
+        border-bottom: 1px solid rgba(146, 111, 58, 0.36);
+        background:
+          linear-gradient(90deg, rgba(255, 248, 226, 0.88), rgba(255, 248, 226, 0.64)),
+          radial-gradient(circle at 82% 58%, rgba(94, 83, 64, 0.18), transparent 22%);
+      }
+
+      .detail::before {
+        content: "H";
+        position: absolute;
+        left: 26px;
+        top: 22px;
+        display: grid;
+        place-items: center;
+        width: 68px;
+        height: 88px;
+        color: #f5e4b5;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.14), transparent),
+          #31513f;
+        border: 2px solid rgba(146, 111, 58, 0.68);
+        border-radius: 8px 8px 22px 22px;
+        box-shadow: 0 8px 16px rgba(68, 43, 20, 0.2);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 50px;
+        font-weight: 900;
+      }
+
+      .detail::after {
+        content: "";
+        position: absolute;
+        right: 22px;
+        bottom: 12px;
+        width: 240px;
+        height: 88px;
+        opacity: 0.55;
+        background:
+          linear-gradient(135deg, transparent 0 38%, rgba(79, 69, 51, 0.55) 39% 42%, transparent 43%),
+          linear-gradient(155deg, transparent 0 54%, rgba(79, 69, 51, 0.48) 55% 58%, transparent 59%),
+          radial-gradient(ellipse at 72% 72%, rgba(79, 69, 51, 0.18), transparent 42%);
+        clip-path: polygon(4% 88%, 18% 60%, 28% 78%, 38% 36%, 50% 68%, 62% 20%, 78% 58%, 88% 18%, 98% 88%);
       }
 
       .detail h2 {
         margin: 0 0 6px;
-        font-size: 20px;
+        color: #4b3924;
+        font-size: 30px;
         line-height: 1.25;
       }
 
@@ -581,15 +644,19 @@
         gap: 8px;
       }
 
+      .route-card .tag {
+        width: fit-content;
+      }
+
       .route-card h2 {
         margin: 0;
-        font-size: 18px;
+        font-size: 30px;
       }
 
       .route-card p {
         margin: 0;
         color: var(--muted);
-        font-size: 13px;
+        font-size: 15px;
         line-height: 1.5;
       }
 
@@ -615,38 +682,43 @@
 
       .chip-row {
         display: flex;
-        gap: 8px;
+        justify-content: center;
+        gap: 18px;
         overflow-x: auto;
-        padding: 12px 16px;
-        border-bottom: 1px solid var(--line);
-        background: #f8fafc;
+        padding: 16px 18px;
+        border-bottom: 1px solid rgba(146, 111, 58, 0.28);
+        background: rgba(255, 247, 226, 0.42);
       }
 
       .chip-row button {
         flex: 0 0 auto;
+        min-width: 104px;
         border-radius: 999px;
-        padding: 7px 10px;
-        color: #475569;
-        background: #ffffff;
-        border: 1px solid var(--line);
-        font-size: 13px;
+        padding: 9px 16px;
+        color: #5b4328;
+        background:
+          linear-gradient(180deg, rgba(255, 250, 232, 0.95), rgba(235, 214, 174, 0.72));
+        border: 1px solid rgba(146, 111, 58, 0.44);
+        font-size: 16px;
         font-weight: 700;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
       }
 
       .chip-row button.active {
-        color: #ffffff;
-        background: #1f2937;
-        border-color: #1f2937;
+        color: #fff7e2;
+        background: linear-gradient(180deg, #6f8a49, #4f6835);
+        border-color: #526c38;
       }
 
       .timeline {
         overflow: auto;
-        padding: 12px 16px 16px;
+        padding: 18px 24px 24px;
       }
 
       .timeline h3 {
-        margin: 0 0 10px;
-        font-size: 14px;
+        margin: 0 0 14px;
+        color: #594226;
+        font-size: 16px;
       }
 
       .timeline-list {
@@ -657,31 +729,38 @@
       .timeline button {
         width: 100%;
         display: grid;
-        grid-template-columns: 76px 1fr;
-        gap: 10px;
+        grid-template-columns: 126px 54px 1fr;
+        gap: 18px;
         align-items: start;
-        padding: 10px;
+        min-height: 82px;
+        padding: 14px 18px;
         border-radius: 8px;
         color: var(--ink);
-        background: #ffffff;
-        border: 1px solid var(--line);
+        background:
+          linear-gradient(180deg, rgba(255, 250, 232, 0.9), rgba(245, 230, 199, 0.84));
+        border: 1px solid rgba(146, 111, 58, 0.36);
         text-align: left;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.48);
       }
 
       .timeline button.active {
-        border-color: #f59e0b;
-        background: #fffbeb;
+        border-color: #b78335;
+        background:
+          linear-gradient(180deg, rgba(255, 244, 209, 0.96), rgba(241, 218, 174, 0.9));
       }
 
       .time {
-        color: #475569;
-        font-size: 12px;
+        color: #53633b;
+        font-size: 20px;
         font-weight: 800;
+        line-height: 1.18;
       }
 
       .step-title {
         display: block;
         margin-bottom: 3px;
+        color: #4b3924;
+        font-size: 21px;
         font-weight: 850;
         line-height: 1.25;
       }
@@ -689,8 +768,19 @@
       .step-note {
         display: block;
         color: var(--muted);
-        font-size: 12px;
+        font-size: 14px;
         line-height: 1.45;
+      }
+
+      .step-icon {
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        color: #7f623a;
+        border-left: 1px solid rgba(146, 111, 58, 0.34);
+        border-right: 1px solid rgba(146, 111, 58, 0.34);
+        font-size: 24px;
       }
 
       .legend {
@@ -698,13 +788,14 @@
         flex-wrap: wrap;
         justify-content: center;
         gap: 6px;
-        width: min(1120px, 100%);
-        min-width: 760px;
+        width: min(760px, 100%);
+        min-width: 520px;
         margin: 8px auto 0;
         padding: 5px 8px;
         border: 1px solid rgba(148, 163, 184, 0.45);
+        border-color: rgba(146, 111, 58, 0.42);
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.78);
+        background: rgba(255, 248, 226, 0.82);
       }
 
       .dot {
@@ -734,9 +825,29 @@
       }
 
       @media (max-width: 980px) {
+        body {
+          width: 100vw;
+        }
+
         .app {
           grid-template-columns: 1fr;
           padding: 10px;
+          width: 100vw;
+          max-width: 100vw;
+          overflow-x: hidden;
+        }
+
+        .map-shell,
+        .side {
+          width: calc(100vw - 20px);
+        }
+
+        .topbar,
+        .title,
+        .route-toggle {
+          width: 100%;
+          min-width: 0;
+          max-width: 100%;
         }
 
         .side {
@@ -750,28 +861,49 @@
 
         .route-toggle {
           width: 100%;
+          grid-template-columns: 1fr;
+          gap: 4px;
+          padding: 5px;
         }
 
         .route-toggle button {
           min-width: 0;
+          padding: 9px 8px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 14px;
+        }
+
+        .title h1 {
+          font-size: 25px;
+        }
+
+        .title p {
+          overflow-wrap: anywhere;
         }
 
         .map-scroll {
+          width: 100%;
+          max-width: 100%;
+          max-height: 560px;
           padding: 10px;
-          overflow: hidden;
-          touch-action: none;
+          overflow: hidden auto;
+          touch-action: pan-x pan-y;
         }
 
         .park-map {
           min-width: 0;
-          width: 100%;
+          width: calc(100vw - 44px);
+          max-width: calc(100vw - 44px);
           transform-origin: 0 0;
           will-change: transform;
         }
 
         .legend {
           min-width: 0;
-          width: 100%;
+          width: calc(100vw - 44px);
+          max-width: calc(100vw - 44px);
           margin-top: 6px;
           padding: 4px 6px;
           gap: 4px;
@@ -784,6 +916,73 @@
 
         .spot-popup {
           width: min(390px, calc(100% - 28px));
+        }
+
+        .detail {
+          min-height: 0;
+          padding: 18px 18px 18px 88px;
+        }
+
+        .detail::before {
+          left: 18px;
+          top: 18px;
+          width: 50px;
+          height: 66px;
+          font-size: 36px;
+        }
+
+        .detail::after {
+          display: none;
+        }
+
+        .route-card h2,
+        .detail h2 {
+          font-size: 20px;
+        }
+
+        .route-card p {
+          font-size: 13px;
+        }
+
+        .chip-row {
+          justify-content: flex-start;
+          gap: 10px;
+          padding: 12px;
+        }
+
+        .chip-row button {
+          min-width: auto;
+          padding: 8px 13px;
+          font-size: 14px;
+        }
+
+        .timeline {
+          padding: 12px;
+        }
+
+        .timeline button {
+          grid-template-columns: 82px 36px 1fr;
+          gap: 10px;
+          min-height: 74px;
+          padding: 12px;
+        }
+
+        .time {
+          font-size: 15px;
+        }
+
+        .step-icon {
+          width: 30px;
+          height: 34px;
+          font-size: 18px;
+        }
+
+        .step-title {
+          font-size: 17px;
+        }
+
+        .step-note {
+          font-size: 12px;
         }
       }
     </style>
@@ -804,28 +1003,9 @@
 
         <div class="map-scroll">
           <div class="park-map" id="parkMap">
-            <div class="path main" aria-hidden="true"></div>
-            <div class="path loop" aria-hidden="true"></div>
-            <div class="path right" aria-hidden="true"></div>
-            <div class="path left" aria-hidden="true"></div>
-            <div class="path bridge" aria-hidden="true"></div>
-            <div class="tree" style="left: 39%; top: 11%" aria-hidden="true"></div>
-            <div class="tree" style="left: 88%; top: 58%" aria-hidden="true"></div>
-            <div class="tree" style="left: 64%; top: 48%" aria-hidden="true"></div>
-            <div class="tree" style="left: 28%; top: 45%" aria-hidden="true"></div>
-            <div class="tree" style="left: 76%; top: 70%" aria-hidden="true"></div>
-            <div class="lagoon" aria-hidden="true"></div>
-            <div class="zone harry">哈利波特</div>
-            <div class="zone transformers">变形金刚</div>
-            <div class="zone kungfu">功夫熊猫</div>
-            <div class="zone jurassic">侏罗纪</div>
-            <div class="zone waterworld">水世界</div>
-            <div class="zone minion">小黄人</div>
-            <div class="zone hollywood">好莱坞</div>
-            <div class="entrance">大门</div>
-            <svg class="route-layer" viewBox="0 0 1000 781" preserveAspectRatio="none">
-              <polyline class="route-path planA" id="routePathA" points=""></polyline>
-              <polyline class="route-path planB" id="routePathB" points=""></polyline>
+            <img class="map-image" src="assets/universal-beijing-map.png" alt="北京环球影城地图" />
+            <svg class="route-layer" viewBox="0 0 1086 1448" preserveAspectRatio="none">
+              <polyline class="route-path planA" id="routeSegment" points=""></polyline>
             </svg>
             <div class="popup-backdrop" id="popupBackdrop" hidden></div>
             <article class="spot-popup modal" id="spotPopup" aria-live="polite" hidden></article>
@@ -860,6 +1040,15 @@
         service: "服务"
       };
 
+      const typeIcons = {
+        all: "✦",
+        ride: "✸",
+        show: "✩",
+        food: "♜",
+        photo: "✿",
+        service: "✥"
+      };
+
       const routes = {
         planA: {
           title: "Plan A：提前入园，先冲哈利波特",
@@ -876,7 +1065,8 @@
             "hammond",
             "waterworld-show",
             "untrainable",
-            "hogwarts-castle"
+            "hogwarts-castle",
+            "citywalk-shop"
           ]
         },
         planB: {
@@ -890,10 +1080,12 @@
             "decepticoaster",
             "forbidden-journey",
             "three-broomsticks",
-            "waterworld-show",
             "jurassic-adventure",
             "hammond",
-            "hogwarts-castle"
+            "waterworld-show",
+            "untrainable",
+            "hogwarts-castle",
+            "citywalk-shop"
           ]
         }
       };
@@ -904,8 +1096,8 @@
           name: "开局小仪式",
           area: "入口右侧",
           type: "service",
-          x: 10,
-          y: 84,
+          x: 39,
+          y: 72,
           priority: "暗号任务",
           summary: "入园后先完成一个小默契。",
           recommended: "入园后第一站",
@@ -919,8 +1111,8 @@
           name: "环球大地球",
           area: "入口",
           type: "photo",
-          x: 14,
-          y: 78,
+          x: 24,
+          y: 67,
           priority: "经典拍照",
           summary: "入园仪式感点位。",
           recommended: "入园 / 离园",
@@ -935,12 +1127,12 @@
           area: "哈利波特的魔法世界",
           type: "ride",
           x: 86,
-          y: 44,
+          y: 35,
           priority: "必玩 NO.1",
           summary: "最核心项目，早起成功就先冲。",
           recommended: "提前入园 / 中午错峰",
           budget: "门票内",
-          tips: "Plan B 也必须保留这个点。中午如果排队比早高峰低，就在哈利波特区解决。",
+          tips: "厕所能听见哭声。",
           planA: { time: "08:10-09:00", note: "早起成功第一目标。" },
           planB: { time: "11:30-12:30", note: "变形金刚后回哈利波特，中午错峰玩必去项。" }
         },
@@ -949,8 +1141,8 @@
           name: "三把扫帚",
           area: "哈利波特的魔法世界",
           type: "food",
-          x: 78,
-          y: 42,
+          x: 82,
+          y: 41,
           priority: "氛围餐厅",
           summary: "湖景位可和霍格沃茨城堡同框。",
           recommended: "10:30 前后 / 12:50 后 / 17:30-18:00",
@@ -965,7 +1157,7 @@
           area: "哈利波特的魔法世界",
           type: "photo",
           x: 91,
-          y: 36,
+          y: 31,
           priority: "必拍",
           summary: "白天和夜晚都值得拍。",
           recommended: "早上人少 / 晚间灯光",
@@ -979,8 +1171,8 @@
           name: "霸天虎过山车",
           area: "变形金刚基地",
           type: "ride",
-          x: 17,
-          y: 31,
+          x: 20,
+          y: 27,
           priority: "刺激党必冲",
           summary: "园区刺激强度代表。",
           recommended: "上午 / 饭点错峰",
@@ -994,8 +1186,8 @@
           name: "变形金刚：火种源争夺战",
           area: "变形金刚基地",
           type: "ride",
-          x: 29,
-          y: 33,
+          x: 27,
+          y: 31,
           priority: "必玩",
           summary: "沉浸感强，适合大多数人。",
           recommended: "霸天虎前后",
@@ -1009,23 +1201,23 @@
           name: "侏罗纪世界大冒险",
           area: "侏罗纪世界努布拉岛",
           type: "ride",
-          x: 48,
-          y: 55,
+          x: 42,
+          y: 43,
           priority: "必玩",
           summary: "真实感强，热门大项之一。",
           recommended: "午后错峰",
           budget: "门票内",
           tips: "可和哈蒙德餐厅组合成侏罗纪区域停留；如果时间紧，侏罗纪只保留大冒险。",
           planA: { time: "13:45-14:20", note: "午饭后进入侏罗纪。" },
-          planB: { time: "15:00-15:50", note: "未来水世界后如果有时间再去侏罗纪。" }
+          planB: { time: "15:00-15:50", note: "下午先完成项目，演出放到后面按场次插入。" }
         },
         {
           id: "hammond",
           name: "哈蒙德餐厅",
           area: "侏罗纪世界努布拉岛",
           type: "food",
-          x: 53,
-          y: 65,
+          x: 45,
+          y: 49,
           priority: "正餐备选",
           summary: "适合多人分享，菜品比快餐更完整。",
           recommended: "11:00 前 / 14:00 后",
@@ -1039,38 +1231,38 @@
           name: "未来水世界表演",
           area: "未来水世界",
           type: "show",
-          x: 82,
-          y: 20,
+          x: 75,
+          y: 16,
           priority: "必看演出",
-          summary: "重点表演项目，按当天场次卡点。",
-          recommended: "以 App 场次为准",
+          summary: "重点表演项目，刷完下午项目后按当天场次去看。",
+          recommended: "下午项目后 / 以 App 场次为准",
           budget: "门票内",
-          tips: "前排有湿身风险。当天表演时间必须进官方 App 核对。",
-          planA: { time: "16:10-16:30", note: "按资料路线卡点。" },
-          planB: { time: "14:10-14:40", note: "午餐后去看表演，具体场次以官方 App 为准。" }
+          tips: "前排有湿身风险。没有固定时间，当天表演排期必须进官方 App 核对。",
+          planA: { time: "项目后看场次", note: "下午项目基本完成后去看，作为坐着休息的表演段。" },
+          planB: { time: "项目后看场次", note: "侏罗纪和餐厅结束后再去，按官方 App 选最近合适场次。" }
         },
         {
           id: "untrainable",
           name: "不可驯服",
           area: "好莱坞 / 表演区",
           type: "show",
-          x: 15,
-          y: 53,
+          x: 24,
+          y: 54,
           priority: "演出备选",
-          summary: "7 点前看完后可查漏补缺。",
-          recommended: "傍晚",
+          summary: "下午项目完成后的表演休息段，按当天排期决定。",
+          recommended: "下午项目后 / 以 App 场次为准",
           budget: "门票内",
-          tips: "当天场次不固定，要以官方 App 为准；若停演则改传奇现场/威震天合影。",
-          planA: { time: "17:40-18:10", note: "有合适场次就插入。" },
-          planB: { time: "16:20-16:50", note: "Plan B 的晚高峰缓冲。" }
+          tips: "没有固定时间，要以官方 App 当日场次为准；若停演则改传奇现场/威震天合影。",
+          planA: { time: "项目后看场次", note: "未来水世界前后都可以，下午项目结束后看哪个场次顺。" },
+          planB: { time: "项目后看场次", note: "未来水世界前后都可以，作为刷完项目后的表演缓冲。" }
         },
         {
           id: "kungfu-area",
           name: "功夫熊猫馆",
           area: "功夫熊猫盖世之地",
           type: "photo",
-          x: 59,
-          y: 25,
+          x: 56,
+          y: 19,
           priority: "室内缓冲",
           summary: "天气冷或累时适合作为缓冲区。",
           recommended: "上午中段 / 傍晚",
@@ -1084,14 +1276,14 @@
           name: "环球大门左手边商店",
           area: "好莱坞 / 出入口",
           type: "service",
-          x: 25,
-          y: 72,
+          x: 28,
+          y: 63,
           priority: "购物收尾",
           summary: "所有主题商品较集中。",
           recommended: "离园前",
           budget: "按需",
           tips: "建议最后买，避免背一天。若巡游停演，可改成威震天合影或传奇现场。",
-          planA: { time: "17:30-18:30", note: "拍照、逛街、买纪念品。" },
+          planA: { time: "19:00-19:30", note: "最后统一买，避免背一天。" },
           planB: { time: "19:15-19:40", note: "最后统一买，降低负担。" }
         }
       ];
@@ -1123,12 +1315,21 @@
       const routeIntro = document.getElementById("routeIntro");
       const timelineTitle = document.getElementById("timelineTitle");
 
-      function routePoints(routeKey) {
-        return routes[routeKey].order
-          .map((id) => byId[id])
-          .filter(Boolean)
-          .map((spot) => `${spot.x * 10},${spot.y * 7.81}`)
-          .join(" ");
+      function pointForSpot(spot) {
+        return `${spot.x * 10.86},${spot.y * 14.48}`;
+      }
+
+      function currentRouteSegmentPoints() {
+        const order = routes[activeRoute].order;
+        const currentIndex = order.indexOf(selectedId);
+
+        if (currentIndex <= 0) return "";
+
+        const previous = byId[order[currentIndex - 1]];
+        const current = byId[order[currentIndex]];
+        if (!previous || !current) return "";
+
+        return `${pointForSpot(previous)} ${pointForSpot(current)}`;
       }
 
       function renderMarkers() {
@@ -1204,7 +1405,7 @@
         Object.entries(typeLabels).forEach(([type, label]) => {
           const button = document.createElement("button");
           button.type = "button";
-          button.textContent = label;
+          button.textContent = `${typeIcons[type]} ${label}`;
           if (type === activeFilter) button.classList.add("active");
           button.addEventListener("click", () => {
             activeFilter = type;
@@ -1229,6 +1430,7 @@
           if (spot.id === selectedId) button.classList.add("active");
           button.innerHTML = `
             <span class="time">${step.time || "备选"}</span>
+            <span class="step-icon">${typeIcons[spot.type] || "✦"}</span>
             <span>
               <span class="step-title">${spot.name}</span>
               <span class="step-note">${step.note || spot.summary}</span>
@@ -1245,10 +1447,10 @@
       }
 
       function renderRoutes() {
-        document.getElementById("routePathA").setAttribute("points", routePoints("planA"));
-        document.getElementById("routePathB").setAttribute("points", routePoints("planB"));
-        document.getElementById("routePathA").style.display = activeRoute === "planA" ? "block" : "none";
-        document.getElementById("routePathB").style.display = activeRoute === "planB" ? "block" : "none";
+        const routeSegment = document.getElementById("routeSegment");
+        routeSegment.setAttribute("points", currentRouteSegmentPoints());
+        routeSegment.classList.toggle("planA", activeRoute === "planA");
+        routeSegment.classList.toggle("planB", activeRoute === "planB");
       }
 
       function renderRouteButtons() {
