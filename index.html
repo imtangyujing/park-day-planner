@@ -71,10 +71,54 @@
 
       .title h1 {
         margin: 0;
-        color: #4b3924;
+        color: #4a351d;
         font-size: 26px;
+        font-family:
+          "HanziPen SC", "Xingkai SC", "STXingkai", "Kaiti SC", "STKaiti",
+          "Songti SC", serif;
+        font-weight: 500;
         line-height: 1.2;
         letter-spacing: 0;
+        text-shadow:
+          0 1px 0 rgba(255, 244, 206, 0.92),
+          0 0 9px rgba(117, 76, 28, 0.26),
+          0 6px 12px rgba(62, 39, 16, 0.16);
+        animation:
+          titleInkPulse 4.8s ease-in-out infinite,
+          titleFloat 6.2s ease-in-out infinite;
+      }
+
+      @keyframes titleInkPulse {
+        0%,
+        100% {
+          opacity: 0.88;
+          filter: blur(0.35px) saturate(0.86);
+          text-shadow:
+            0 1px 0 rgba(255, 244, 206, 0.84),
+            0 0 5px rgba(104, 66, 23, 0.18),
+            0 5px 10px rgba(62, 39, 16, 0.12);
+        }
+
+        42%,
+        62% {
+          opacity: 1;
+          filter: blur(0) saturate(1.08);
+          text-shadow:
+            0 1px 0 rgba(255, 244, 206, 0.96),
+            0 0 12px rgba(120, 75, 24, 0.36),
+            0 7px 14px rgba(62, 39, 16, 0.2);
+        }
+      }
+
+      @keyframes titleFloat {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+
+        50% {
+          transform: translateY(-5px);
+        }
       }
 
       .title p {
@@ -120,16 +164,17 @@
 
       .map-scroll {
         flex: 1;
-        overflow: auto;
-        max-height: 540px;
+        display: grid;
+        place-items: center;
+        overflow: visible;
         padding: 20px;
         background: transparent;
       }
 
       .park-map {
         position: relative;
-        width: min(760px, 100%);
-        min-width: 520px;
+        width: min(760px, 100%, 58vh);
+        min-width: 0;
         aspect-ratio: 1086 / 1448;
         margin: 0 auto;
         overflow: hidden;
@@ -857,16 +902,7 @@
       }
 
       .map-shell::after {
-        content: "";
-        position: absolute;
-        z-index: 4;
-        right: 44px;
-        top: 112px;
-        width: 98px;
-        height: 98px;
-        opacity: 0.42;
-        background: url("assets/magic-ui/refresh/compass.png") center / contain no-repeat;
-        pointer-events: none;
+        display: none;
       }
 
       .side::before {
@@ -928,7 +964,6 @@
 
       .map-scroll {
         position: relative;
-        max-height: 430px;
         margin-top: -24px;
         padding: 18px 20px 20px;
         background:
@@ -1248,18 +1283,14 @@
         .map-scroll {
           width: 100%;
           max-width: 100%;
-          max-height: 560px;
           padding: 10px;
-          overflow: hidden auto;
-          touch-action: pan-x pan-y;
+          overflow: visible;
+          touch-action: auto;
         }
 
         .park-map {
-          min-width: 0;
           width: calc(100vw - 44px);
           max-width: calc(100vw - 44px);
-          transform-origin: 0 0;
-          will-change: transform;
         }
 
         .legend {
@@ -1414,6 +1445,19 @@
           0 0 0 6px rgba(143, 119, 82, 0.12);
       }
 
+      .park-map::after {
+        content: "";
+        position: absolute;
+        z-index: 8;
+        top: 14px;
+        right: 14px;
+        width: clamp(88px, 14%, 124px);
+        aspect-ratio: 1;
+        background: url("assets/magic-ui/landmarks/compass-rose.png") center / contain no-repeat;
+        filter: drop-shadow(0 4px 8px rgba(62, 42, 19, 0.22));
+        pointer-events: none;
+      }
+
       .legend {
         border: 0;
         border-radius: 0;
@@ -1541,14 +1585,10 @@
         }
 
         .map-shell::after {
-          right: 18px;
-          top: 154px;
-          width: 58px;
-          height: 58px;
+          display: none;
         }
 
         .map-scroll {
-          max-height: 560px;
           margin-top: 0;
           padding: 10px;
         }
@@ -1619,6 +1659,15 @@
         .timeline button.active {
           padding-left: var(--timeline-edge);
           padding-right: var(--timeline-edge);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .title h1 {
+          animation: none;
+          opacity: 1;
+          filter: none;
+          transform: none;
         }
       }
     </style>
@@ -1942,21 +1991,9 @@
       let activeFilter = "all";
       let selectedId = "birthday";
       let popupOpen = false;
-      const mapZoom = {
-        scale: 1,
-        x: 0,
-        y: 0,
-        startScale: 1,
-        startX: 0,
-        startY: 0,
-        startDistance: 0,
-        startCenter: null,
-        panStart: null
-      };
 
       const byId = Object.fromEntries(spots.map((spot) => [spot.id, spot]));
       const parkMap = document.getElementById("parkMap");
-      const mapScroll = document.querySelector(".map-scroll");
       const detail = document.getElementById("detail");
       const spotPopup = document.getElementById("spotPopup");
       const popupBackdrop = document.getElementById("popupBackdrop");
@@ -2124,110 +2161,6 @@
         renderTimeline();
         renderRouteButtons();
       }
-
-      function isMobileMap() {
-        return window.matchMedia("(max-width: 980px)").matches;
-      }
-
-      function clampMapPan() {
-        const viewport = mapScroll.getBoundingClientRect();
-        const baseX = parkMap.offsetLeft;
-        const baseY = parkMap.offsetTop;
-        const availableWidth = viewport.width - baseX * 2;
-        const availableHeight = viewport.height - baseY * 2;
-        const mapWidth = parkMap.offsetWidth * mapZoom.scale;
-        const mapHeight = parkMap.offsetHeight * mapZoom.scale;
-        const minX = Math.min(0, availableWidth - mapWidth);
-        const minY = Math.min(0, availableHeight - mapHeight);
-
-        mapZoom.x = Math.min(0, Math.max(minX, mapZoom.x));
-        mapZoom.y = Math.min(0, Math.max(minY, mapZoom.y));
-
-        if (mapZoom.scale === 1) {
-          mapZoom.x = 0;
-          mapZoom.y = 0;
-        }
-      }
-
-      function applyMapTransform() {
-        clampMapPan();
-        parkMap.style.transform = `translate(${mapZoom.x}px, ${mapZoom.y}px) scale(${mapZoom.scale})`;
-      }
-
-      function touchDistance(touches) {
-        return Math.hypot(
-          touches[0].clientX - touches[1].clientX,
-          touches[0].clientY - touches[1].clientY
-        );
-      }
-
-      function touchCenter(touches) {
-        return {
-          x: (touches[0].clientX + touches[1].clientX) / 2,
-          y: (touches[0].clientY + touches[1].clientY) / 2
-        };
-      }
-
-      mapScroll.addEventListener("touchstart", (event) => {
-        if (!isMobileMap()) return;
-
-        if (event.touches.length === 2) {
-          const rect = parkMap.getBoundingClientRect();
-          const center = touchCenter(event.touches);
-
-          mapZoom.startScale = mapZoom.scale;
-          mapZoom.startX = mapZoom.x;
-          mapZoom.startY = mapZoom.y;
-          mapZoom.startDistance = touchDistance(event.touches);
-          mapZoom.startCenter = {
-            screenX: center.x,
-            screenY: center.y,
-            mapX: (center.x - rect.left) / mapZoom.scale,
-            mapY: (center.y - rect.top) / mapZoom.scale
-          };
-        } else if (event.touches.length === 1 && mapZoom.scale > 1) {
-          mapZoom.panStart = {
-            screenX: event.touches[0].clientX,
-            screenY: event.touches[0].clientY,
-            x: mapZoom.x,
-            y: mapZoom.y
-          };
-        }
-      }, { passive: true });
-
-      mapScroll.addEventListener("touchmove", (event) => {
-        if (!isMobileMap()) return;
-
-        if (event.touches.length === 2 && mapZoom.startCenter) {
-          event.preventDefault();
-          const center = touchCenter(event.touches);
-          const nextScale = mapZoom.startScale * (touchDistance(event.touches) / mapZoom.startDistance);
-          mapZoom.scale = Math.min(3, Math.max(1, nextScale));
-          const viewport = mapScroll.getBoundingClientRect();
-          mapZoom.x = center.x - viewport.left - parkMap.offsetLeft - mapZoom.startCenter.mapX * mapZoom.scale;
-          mapZoom.y = center.y - viewport.top - parkMap.offsetTop - mapZoom.startCenter.mapY * mapZoom.scale;
-          applyMapTransform();
-        } else if (event.touches.length === 1 && mapZoom.panStart && mapZoom.scale > 1) {
-          event.preventDefault();
-          mapZoom.x = mapZoom.panStart.x + event.touches[0].clientX - mapZoom.panStart.screenX;
-          mapZoom.y = mapZoom.panStart.y + event.touches[0].clientY - mapZoom.panStart.screenY;
-          applyMapTransform();
-        }
-      }, { passive: false });
-
-      mapScroll.addEventListener("touchend", () => {
-        mapZoom.startCenter = null;
-        mapZoom.panStart = null;
-      });
-
-      window.addEventListener("resize", () => {
-        if (!isMobileMap()) {
-          mapZoom.scale = 1;
-          mapZoom.x = 0;
-          mapZoom.y = 0;
-        }
-        applyMapTransform();
-      });
 
       function closePopup() {
         popupOpen = false;
